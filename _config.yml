@@ -8,36 +8,36 @@ subtitle: notes
 description: 学习-分享
 author: leo
 language: zh-Hans
-timezone:
+timezone: #网站时区。Hexo 默认使用您电脑的时区。时区列表。比如说：America/New_York, Japan, 和 UTC 。
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
-root: /
-permalink: :year/:month/:day/:title/
-permalink_defaults:
+url: http://yoursite.com               #你的站点Url
+root: /                                #站点的根目录
+permalink: :year/:month/:day/:title/   #文章的 永久链接 格式
+permalink_defaults:                    #永久链接中各部分的默认值
 
 # Directory
-source_dir: source
-public_dir: public
-tag_dir: tags
-archive_dir: archives
-category_dir: categories
-code_dir: downloads/code
-i18n_dir: :lang
-skip_render:
+source_dir: source         #资源文件夹，这个文件夹用来存放内容
+public_dir: public         #公共文件夹，这个文件夹用于存放生成的站点文件
+tag_dir: tags              #标签文件夹
+archive_dir: archives      #归档文件夹
+category_dir: categories   #分类文件夹
+code_dir: downloads/code   #Include code 文件夹
+i18n_dir: :lang            #国际化（i18n）文件夹
+skip_render:               #跳过指定文件的渲染，您可使用 glob 表达式来匹配路径
 
 # Writing
-new_post_name: :title.md # File name of new posts
-default_layout: post
-titlecase: false # Transform title into titlecase
-external_link: true # Open external links in new tab
-filename_case: 0
-render_drafts: false
-post_asset_folder: false
-relative_link: false
-future: true
-highlight:
+new_post_name: :title.md    # File name of new posts  #新文章的文件名称
+default_layout: post                                  #预设布局
+titlecase: false # Transform title into titlecase     #把标题转换为 title case
+external_link: true # Open external links in new tab  #在新标签中打开链接
+filename_case: 0            #把文件名称转换为 (1) 小写或 (2) 大写
+render_drafts: false        #是否显示草稿
+post_asset_folder: false    #是否启动 Asset 文件夹
+relative_link: false        #把链接改为与根目录的相对位址
+future: true                #显示未来的文章
+highlight:                  #内容中代码块的设置
   enable: true
   line_number: true
   auto_detect: false
@@ -45,28 +45,28 @@ highlight:
 
 # Category & Tag
 default_category: uncategorized
-category_map:
-tag_map:
+category_map:          #分类别名
+tag_map:               #标签别名
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
 ## You can customize the date format as defined in
 ## http://momentjs.com/docs/#/displaying/format/
-date_format: YYYY-MM-DD
-time_format: HH:mm:ss
+date_format: YYYY-MM-DD     #日期格式
+time_format: HH:mm:ss       #时间格式
 
 # Pagination
 ## Set per_page to 0 to disable pagination
-per_page: 10
+per_page: 10            #分页数量
 pagination_dir: page
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: next             #主题名称
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
-deploy:
+deploy:      #部署部分的设置
   type: git
   repo: git@github.com:leochn/leochn.github.io.git

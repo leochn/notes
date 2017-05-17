@@ -39,11 +39,11 @@ seo: false
 menu:  #菜单路径设置 如果hexo在二级目录放置要去掉/
   home: /
   #categories: /categories
-  about: /about      #关于我
+  about: /about       #关于我
   archives: /archives #归档
   tags: /tags         #标签
   #sitemap: /sitemap.xml
-  #commonweal: /404.html   #公益404
+  commonweal: /404.html   #公益404
 
 
 # Enable/Disable menu icons.
@@ -527,7 +527,10 @@ vendors:
   # https://github.com/hustcc/canvas-nest.js
   canvas_nest:
 
-
+# 打赏功能配置示例
+reward_comment: 坚持原创技术分享，您的支持将鼓励我继续创作！
+wechatpay: /img/vue/vue.PNG
+alipay: /img/vue/vue.PNG
 
 # Assets
 css: css
