@@ -529,8 +529,8 @@ vendors:
 
 # 打赏功能配置示例
 reward_comment: 坚持原创技术分享，您的支持将鼓励我继续创作！
-wechatpay: /img/vue/vue.PNG
-alipay: /img/vue/vue.PNG
+wechatpay: /assets/images/home/wechatpay.jpg
+alipay: /assets/images/home/alipay.jpg
 
 # Assets
 css: css

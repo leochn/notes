@@ -18,4 +18,4 @@ adkjflskjfa
 jjjlkjadfj
 ```
 
-![hexo效果](/img/vue/vue.PNG)
+![hexo效果](/assets/images/vue/vue.PNG)
