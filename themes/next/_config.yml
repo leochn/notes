@@ -3,10 +3,10 @@
 # ---------------------------------------------------------------
 
 # Put your favicon.ico into `hexo-site/source/` directory.
-favicon: /favicon.ico
+favicon: /favicon.ico  #站标  可以放在hexo文件夹下的/source里
 
 # Set default keywords (Use a comma to separate)
-keywords: "Hexo, NexT"
+keywords: "Hexo, NexT"  #网站关键字
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
@@ -14,7 +14,7 @@ keywords: "Hexo, NexT"
 rss:
 
 # Specify the date when the site was setup
-#since: 2015
+since: 2015  #网站时间 从xx开始 类似 2015-2017
 
 # icon between year and author @Footer
 authoricon: heart
@@ -36,14 +36,14 @@ seo: false
 # ---------------------------------------------------------------
 
 # When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/archives -> archives)
-menu:
+menu:  #菜单路径设置 如果hexo在二级目录放置要去掉/
   home: /
   #categories: /categories
-  #about: /about
-  archives: /archives
-  tags: /tags
+  about: /about      #关于我
+  archives: /archives #归档
+  tags: /tags         #标签
   #sitemap: /sitemap.xml
-  #commonweal: /404.html
+  #commonweal: /404.html   #公益404
 
 
 # Enable/Disable menu icons.
@@ -51,7 +51,7 @@ menu:
 #   Map a menu item to a specific FontAwesome icon name.
 #   Key is the name of menu item and value is the name of FontAwesome icon. Key is case-senstive.
 #   When an question mask icon presenting up means that the item has no mapping icon.
-menu_icons:
+menu_icons:  #icon图标
   enable: true
   #KeyMapsToMenuItemKey: NameOfTheIconFromFontAwesome
   home: home
@@ -70,7 +70,7 @@ menu_icons:
 # Scheme Settings
 # ---------------------------------------------------------------
 
-# Schemes
+# Schemes  #next的三个scheme
 #scheme: Muse
 #scheme: Mist
 scheme: Pisces
@@ -130,14 +130,14 @@ font:
 # ---------------------------------------------------------------
 
 
-# Social Links
+# Social Links #社交链接
 # Key is the link label showing to end users.
 # Value is the target link (E.g. GitHub: https://github.com/iissnan)
 #social:
   #LinkLabel: Link
 
 
-# Social Links Icons
+# Social Links Icons  #社交链接的图标
 # Icon Mapping:
 #   Map a menu item to a specific FontAwesome icon name.
 #   Key is the name of the item and value is the name of FontAwesome icon. Key is case-senstive.
@@ -157,7 +157,7 @@ social_icons:
 #avatar:
 
 
-# Table Of Contents in the Sidebar
+# Table Of Contents in the Sidebar #文章自动显示目录
 toc:
   enable: true
 
