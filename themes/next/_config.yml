@@ -344,7 +344,7 @@ changyan:
 #yandex_site_verification:
 
 # CNZZ count
-#cnzz_siteid:
+cnzz_siteid: 1261969478
 
 # Application Insights
 # See https://azure.microsoft.com/en-us/services/application-insights/
@@ -532,8 +532,6 @@ reward_comment: 坚持原创技术分享，您的支持将鼓励我继续创作�
 wechatpay: /assets/images/home/wechatpay.jpg
 alipay: /assets/images/home/alipay.jpg
 
-#### Analytics
-cnzz: true
 
 # Assets
 css: css
