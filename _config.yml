@@ -12,7 +12,7 @@ timezone: #网站时区。Hexo 默认使用您电脑的时区。时区列表。�
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com               #你的站点Url
+url: http://netsite.win                #你的站点Url
 root: /                                #站点的根目录
 permalink: :year/:month/:day/:title/   #文章的 永久链接 格式
 permalink_defaults:                    #永久链接中各部分的默认值
