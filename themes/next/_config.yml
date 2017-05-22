@@ -392,8 +392,8 @@ vkontakte_api:
 # You can visit https://leancloud.cn get AppID and AppKey.
 leancloud_visitors:
   enable: false
-  app_id: #<app_id>
-  app_key: #<app_key>
+  app_id: 16f0ob6aCgQiy7btiqgLyCSH-gzGzoHsz
+  app_key: zAvD9NJlKRv23PAxMAN0fvXT
 
 # Show PV/UV of the website/page with busuanzi.
 # Get more information on http://ibruce.info/2015/04/04/busuanzi/
