@@ -5,9 +5,15 @@ tags: mysql
 ---
 ## mysql游标使用的需求:
 根据一张表的数据结果,改变另外一张表字段的数据.
+<!-- more -->
 
 ## 场景
-如果 function_reference 表中的NAME,REL_NAME1,REL_NAME2,REL_NAME3,REL_NAME4,REL_NAME5,REL_NAME6,这些字段中的值与 points 表中 code 字段的值相等,则 function_reference 的ID值赋值给 points 表中的 ID_FUNCTION 字段.
+```
+如果function_reference表中的
+NAME,REL_NAME1,REL_NAME2,REL_NAME3,REL_NAME4,REL_NAME5,REL_NAME6,
+这些字段中的值与points表中code字段的值相等,
+则 function_reference 的ID值赋值给 points 表中的 ID_FUNCTION 字段.
+```
 
 ```sql
 CREATE TABLE `function_reference` (
