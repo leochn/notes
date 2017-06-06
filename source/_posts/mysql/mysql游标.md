@@ -79,25 +79,25 @@ begin
   while row_count = 1 do
     if !isnull(row_name00) then # isnull(expr) 的用法:如expr 为null,那么isnull() 的返回值为 1,否则返回值为 0.
       # 如果 row_name00 中的值不为 NULL ,则执行 update 语句.
-      update points set ID_FUNCTION=row_id where code=row_name00;
+      update services set ID_FUNCTION=row_id where code=row_name00 and ID_FUNCTION IS NULL;
     end if;
     if !isnull(row_name01) then
-      update points set ID_FUNCTION=row_id where code=row_name01;
+      update services set ID_FUNCTION=row_id where code=row_name01 and ID_FUNCTION IS NULL;
     end if;
     if !isnull(row_name02) then
-      update points set ID_FUNCTION=row_id where code=row_name02;
+      update services set ID_FUNCTION=row_id where code=row_name02 and ID_FUNCTION IS NULL;
     end if;
     if !isnull(row_name03) then
-      update points set ID_FUNCTION=row_id where code=row_name03;
+      update services set ID_FUNCTION=row_id where code=row_name03 and ID_FUNCTION IS NULL;
     end if;
     if !isnull(row_name04) then
-      update points set ID_FUNCTION=row_id where code=row_name04;
+      update services set ID_FUNCTION=row_id where code=row_name04 and ID_FUNCTION IS NULL;
     end if;
     if !isnull(row_name05) then
-      update points set ID_FUNCTION=row_id where code=row_name05;
+      update services set ID_FUNCTION=row_id where code=row_name05 and ID_FUNCTION IS NULL;
     end if;
     if !isnull(row_name06) then
-      update points set ID_FUNCTION=row_id where code=row_name06;
+      update services set ID_FUNCTION=row_id where code=row_name06 and ID_FUNCTION IS NULL;
     end if;
     fetch getData into row_id,row_name00,row_name01,row_name02,row_name03,row_name04,row_name05,row_name06;
   end while;  
