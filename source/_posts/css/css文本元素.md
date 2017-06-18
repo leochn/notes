@@ -9,6 +9,7 @@ Font-weight:700 ;   值从100-900，文字粗细，不推荐使用font-weight:bo
 Font-family:微软雅黑; 文本的字体
 Font-style:normal | italic;      normal 默认值  italic  斜体
 line-height:行高
+text-align:文本对齐属性( left->居左,缺省值;  right->居右;  center->居中 ; justify -> 两端对齐)
 <!-- more -->
 
 ![css文本元素-属性](/assets/images/css/css文本元素-属性.png)

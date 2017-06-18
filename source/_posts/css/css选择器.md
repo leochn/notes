@@ -14,7 +14,7 @@ tags: css
 |Height:20px;                         |高                 |
 |Background-color:red;                |背景颜色           |
 |font-size:24px;                      |文字大小           |
-|text-align:left | center| right      |内容的水平对齐方式 |
+|text-align:left or:center  or:right  |内容的水平对齐方式 |
 |text-indent:2em;                     |首行缩进           |
 |Color:red;                           |字颜色             |
 
