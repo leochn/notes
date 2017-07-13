@@ -153,27 +153,41 @@ h2:hover {
 }
 ```
 
-### 命名参数
+### @arguments变量
+A. @arguments:代表所有可变参数,参数的先后哦顺序就是你的()括号内的参数的先后顺序.
+B. 在使用过程中,值的位置和个数也是一一对应的,只有一个值,把值赋给第一个,
+   两个值,赋值给第一和第二个,三个值,分别赋值给3个.
+   如果需要把值赋给第一和第三个,不能写成(值1,,值3),必须把原来默认的值写上去.
 ```
 <!-- less -->
-
+.border(@x:solid,@c:red){
+  border: 21px @arguments;
+}
+.div1{
+  .border(solid);
+}
 <!-- css -->
-
+.div1 {
+  border: 21px solid #ff0000;
+}
 ```
 
-### 带多个参数的混合
+### 得到混合变量的返回值
 ```
 <!-- less -->
-
+.average(@x, @y) {
+  @average: ((@x + @y) / 2);
+  @he:(@x + @y);
+}
+div {
+  .average(16px, 50px);
+  padding: @average;
+  margin: @he;
+}
 <!-- css -->
-
-```
-
-### 混合的返回值
-```
-<!-- less -->
-
-<!-- css -->
-
+div {
+  padding: 33px;
+  margin: 66px;
+}
 ```
 
