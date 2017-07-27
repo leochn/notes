@@ -61,6 +61,13 @@ end //
 call updateFieldByOther();
 ```
 
+7. 最简单的方法:
+获取字符串的长度: length(str);
+select length('helloworld'); # 10
+
+获取倒数第二位以前的字符串:
+select substring('helloworld',1,length('helloworld') - 2) # hellowor
+
 
 
 
