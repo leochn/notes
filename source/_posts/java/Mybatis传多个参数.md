@@ -50,7 +50,7 @@ Private User xxxSelectUser(){
 
 Dao层的函数方法
 ```java
-Public User selectUser(@param("userName")Stringname,@param("userArea")String area);
+Public User selectUser(@Param("userName")String name,@Param("userArea")String area);
 ```
 
 对应的Mapper.xml
