@@ -11,6 +11,7 @@ tags: vue
 
 ![IE不兼容Promise](/assets/images/vue/IE不兼容Promise-002.png)
 
+<!-- more -->
 ## 解决方法
 
 ### 第一步:安装 babel-polyfill
