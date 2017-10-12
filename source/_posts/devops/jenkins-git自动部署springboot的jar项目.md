@@ -153,6 +153,6 @@ job/testJenkinsDocker/build?token=123456  ## 123456为触发远程构建的身�
 
 修改源码,并进行push提交,jenkins会自动进行代码构建和部署.
 ![jenkins持续部署](/assets/images/devops/jenkins-git持续部署项目009.png)
->>>>>>> aa41fc672f4d41d6e3f13c237f82ecdb73c1bc45
+
 
 
