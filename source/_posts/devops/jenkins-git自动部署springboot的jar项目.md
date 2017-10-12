@@ -137,10 +137,13 @@ Finished: SUCCESS
 http://admin:b4b0b62f9eaa2b32ade4adadxxxxa@www.baidu.com:8080/job/testJenkinsDocker/build?token=123456
 ```
 
-这个url的格式为三段式:
+这个url的格式为4段式:
+```
 http://
-admin:b4b0b62f9eaa2b32ade4adadxxxxa@
-www.baidu.com:8080/job/testJenkinsDocker/build?token=123456
+admin:b4b0b62f9eaa2b32ade4adadxxxxa@     ## 为jenkins中admin用户的API Token
+www.baidu.com:8080/   ## 为jenkins服务器的url地址,这里假设为baidu
+job/testJenkinsDocker/build?token=123456  ## 123456为触发远程构建的身份验证令牌
+```
 
 其中第2段中的信息来源为:jenkins中admin用户的API Token:
 ![jenkins持续部署](/assets/images/devops/jenkins-git持续部署项目007.png)
