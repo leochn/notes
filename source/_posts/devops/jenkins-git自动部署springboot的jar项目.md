@@ -129,15 +129,27 @@ Finished: SUCCESS
 
 ## 通过github中的WebHooks触发jenkins自动构建并部署项目
 
+在jenkins构建触发器中选中"触发远程构建(例如,使用脚本)"
+![jenkins持续部署](/assets/images/devops/jenkins-git持续部署项目006.png)
 
+在源码中的WebHooks中配置url为:
+```
+http://admin:b4b0b62f9eaa2b32ade4adadxxxxa@www.baidu.com:8080/job/testJenkinsDocker/build?token=123456
+```
 
+这个url的格式为三段式:
+http://
+admin:b4b0b62f9eaa2b32ade4adadxxxxa@
+www.baidu.com:8080/job/testJenkinsDocker/build?token=123456
 
+其中第2段中的信息来源为:jenkins中admin用户的API Token:
+![jenkins持续部署](/assets/images/devops/jenkins-git持续部署项目007.png)
 
+源码仓库中WebHooks中的设置为下图:
+![jenkins持续部署](/assets/images/devops/jenkins-git持续部署项目008.png)
 
-
-
-
-
-
+修改源码,并进行push提交,jenkins会自动进行代码构建和部署.
+![jenkins持续部署](/assets/images/devops/jenkins-git持续部署项目009.png)
+>>>>>>> aa41fc672f4d41d6e3f13c237f82ecdb73c1bc45
 
 
