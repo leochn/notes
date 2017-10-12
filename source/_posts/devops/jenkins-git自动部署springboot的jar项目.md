@@ -128,3 +128,16 @@ Finished: SUCCESS
 ```
 
 ## 通过github中的WebHooks触发jenkins自动构建并部署项目
+
+
+
+
+
+
+
+
+
+
+
+
+
