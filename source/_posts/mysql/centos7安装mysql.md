@@ -1,7 +1,7 @@
 ---
 title: centos7安装mysql
 date: 2017-07-30 06:08:39
-tags: [myql,centos]
+tags: [mysql,centos7]
 ---
 本文是 CentOS7下使用yum安装MySQL的一些步骤
 <!-- more -->
