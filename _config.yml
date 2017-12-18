@@ -69,4 +69,4 @@ theme: next             #主题名称
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:      #部署部分的设置
   type: git
-  repo: git@github.com:leochn/leochn.github.io.git
+  repo: https://github.com/leochn/leochn.github.io.git
