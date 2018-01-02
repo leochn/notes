@@ -6,12 +6,11 @@ tags: [centos7,squild]
 https://help.aliyun.com/document_detail/25834.html?spm=5176.doc25836.6.556.DfdVy7
 
 squid正向代理
-更新时间：2017-06-07 13:26:11
    
 阿里云HPC物理机本身不能访问外网，只能通过ECS正向代理访问。
 
 本文档将指导用户如何设置代理服务器。
-
+<!-- more -->
 1. 确定IP地址
 
 用户应首先确认这几个IP地址：
