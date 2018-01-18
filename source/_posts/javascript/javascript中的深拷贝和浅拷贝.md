@@ -77,3 +77,119 @@ console.log(y.b.f === x.b.f);     // true
 ```
 
 ## 深拷贝的实现
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script>
+    // 深拷贝...
+    var cloneObj = function(obj){
+        var str, newobj = obj.constructor === Array ? [] : {};
+        if(typeof obj !== 'object'){
+            return;
+        } else if(window.JSON){
+            str = JSON.stringify(obj), //系列化对象
+            newobj = JSON.parse(str);  //还原
+        } else {
+            for(var i in obj){
+                newobj[i] = typeof obj[i] === 'object' ? 
+                cloneObj(obj[i]) : obj[i]; 
+            }
+        }
+        return newobj;
+    };
+    var resultData = [{
+                  "id": "320800",
+                  "parentId": "100000",
+                  "name": "江苏省",
+                  "children": [{
+                      "id": "320801",
+                      "parentId": "320800",
+                      "name": "江苏省-项目1",
+                      "children": [{
+                          "id": "QWQWQWWQ",
+                          "parentId": "320801",
+                          "name": "项目1-泵房1",
+                          "children": [{
+                              "id": "951372609180696577",
+                              "parentId": "320801",
+                              "name": "项目1-泵房1-设备1"
+                          }, {
+                              "id": "951374939439529986",
+                              "parentId": "320801",
+                              "name": "项目1-泵房1-设备2"
+                          }]
+                      }, {
+                          "id": "951372609180696577",
+                          "parentId": "320801",
+                          "name": "项目1-泵房2",
+                          "children": [{
+                              "id": "951372609180696577",
+                              "parentId": "320801",
+                              "name": "项目1-泵房2-设备1"
+                          }, {
+                              "id": "951374939439529986",
+                              "parentId": "320801",
+                              "name": "项目1-泵房2-设备2"
+                          }]
+                      }]
+                  }, {
+                      "id": "320801",
+                      "parentId": "320800",
+                      "name": "江苏省-项目2",
+                      "children": [{
+                          "id": "951372609180696577",
+                          "parentId": "320801",
+                          "name": "项目2-泵房1",
+                          "children": [{
+                              "id": "951372609180696577",
+                              "parentId": "320801",
+                              "name": "项目2-泵房1-设备1"
+                          }, {
+                              "id": "951374939439529986",
+                              "parentId": "320801",
+                              "name": "项目2-泵房1-设备2"
+                          }]
+                      }, {
+                          "id": "951372609180696577",
+                          "parentId": "320801",
+                          "name": "项目2-泵房2",
+                          "children": [{
+                              "id": "951372609180696577",
+                              "parentId": "320801",
+                              "name": "项目2-泵房2-设备1"
+                          }, {
+                              "id": "951374939439529986",
+                              "parentId": "320801",
+                              "name": "项目2-泵房2-设备2"
+                          }]
+                      }]
+                  }]
+              }]
+    var newDataCloneObj = cloneObj(resultData);
+    newDataCloneObj[0].id = '12121212';
+    newDataCloneObj[0].children[0].id='asd123456'
+    newDataCloneObj[0].children[0].children[1].name ='asd123456设备IIIDDD'
+    console.log(resultData[0].id);
+    console.log(newDataCloneObj[0].id);
+
+    console.log(resultData[0].children[0].id);
+    console.log(newDataCloneObj[0].children[0].id);
+
+    console.log(resultData[0].children[0].children[1].name);
+    console.log(newDataCloneObj[0].children[0].children[1].name);
+  </script>
+</head>
+<body>
+    
+</body>
+</html>
+```
+
+
+
+
+
+
