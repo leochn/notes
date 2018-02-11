@@ -36,7 +36,7 @@ IE浏览器版本:
 
 感觉sql语句也没有什么问题，唯一值得怀疑的地方是ServiceInfo类没有id这个属性，问题可能出现在这里，于是，把serviceCode属性名字改为id。然后再请求，发现IE请求响应的json数据没有中文乱码了。
 
-返回json数据乱码:
-![返回json数据乱码](/assets/images/java/IE乱码-返回json数据乱码.png)
+json数据正常:
+![json数据正常](/assets/images/java/IE乱码-json数据正常.png)
 
 
