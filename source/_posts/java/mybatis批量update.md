@@ -4,6 +4,8 @@ date: 2017-08-11 13:26:32
 tags: [java,mybatis]
 ---
 使用mysql 自带的语句构建批量更新
+<!-- more -->
+
 ## sql语句
 ```sql
 update sys_admin
