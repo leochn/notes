@@ -4,6 +4,39 @@ date: 2018-03-07 07:21:00
 tags: mysql
 ---
 ## sql语句执行顺序
+<!-- more -->
+
+### 手写
+```sql
+SELECT DISTINCT
+    <select_list>
+FROM 
+    <left_table> <join_type>
+JOIN <right_table> ON <join_condition>
+WHERE
+    <where_condition>
+GROUP BY
+    <group_by_list>
+HAVING
+    <having_condition>
+ORDER BY
+    <order_by_condition>
+LIMIT <limit_number>
+```
+
+### 机器读
+```sql
+FROM <left_table>
+ON <join_conditon>
+<join_type> JOIN <right_table>
+WHERE <where_condition>
+GROUP BY <group_by_list>
+HAVING <having_conditon>
+SELECT
+DISTINCT <select_list>
+ORDER BY <order_by_condition>
+LIMIT <limit_number>
+```
 
 ## 索引是什么
 在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用（指向）数据，这样就可以在这些数据结构上实现高级查找算法。这种数据结构就是索引。
