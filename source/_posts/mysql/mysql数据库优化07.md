@@ -124,6 +124,34 @@ mysql> EXPLAIN SELECT * from staffs WHERE `name` = 'July' AND age > 23 AND pos =
 mysql>
 ```
 ### 5.尽量使用覆盖索引（只访问索引的查询:索引列和查询列一致），减少select * 的操作。
+```sql
+mysql> EXPLAIN SELECT name,age,pos from staffs WHERE `name` = 'July' AND age = 23 AND pos = 'dev';
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------------------+------+----------+-------------+
+| id | select_type | table  | partitions | type | possible_keys         | key                   | key_len | ref               | rows | filtered | Extra       |
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------------------+------+----------+-------------+
+|  1 | SIMPLE      | staffs | NULL       | ref  | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 140     | const,const,const |    1 |   100.00 | Using index |
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------------------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT * from staffs WHERE `name` = 'July' AND age > 23 AND pos = 'dev';
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+-----------------------+
+| id | select_type | table  | partitions | type  | possible_keys         | key                   | key_len | ref  | rows | filtered | Extra                 |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+-----------------------+
+|  1 | SIMPLE      | staffs | NULL       | range | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 78      | NULL |    1 |    33.33 | Using index condition |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+-----------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT name,age,pos from staffs WHERE `name` = 'July' AND age > 23 AND pos = 'dev';
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table  | partitions | type  | possible_keys         | key                   | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | staffs | NULL       | range | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 78      | NULL |    1 |    33.33 | Using where; Using index |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql>
+```
+额外多了Using index，性能会更好。
 
 ### 6.mysql在使用不等于（!= 或者 <> ）的时候无法使用索引会导致全表扫描。
 
