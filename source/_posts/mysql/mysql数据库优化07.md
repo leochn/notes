@@ -154,11 +154,231 @@ mysql>
 额外多了Using index，性能会更好。
 
 ### 6.mysql在使用不等于（!= 或者 <> ）的时候无法使用索引会导致全表扫描。
+```sql
+mysql> EXPLAIN SELECT name,age,pos from staffs WHERE `name` = 'July';
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------------+
+| id | select_type | table  | partitions | type | possible_keys         | key                   | key_len | ref   | rows | filtered | Extra       |
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------------+
+|  1 | SIMPLE      | staffs | NULL       | ref  | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 74      | const |    1 |   100.00 | Using index |
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
 
+mysql> EXPLAIN SELECT name,age,pos from staffs WHERE `name` != 'July';
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table  | partitions | type  | possible_keys         | key                   | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | staffs | NULL       | index | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 140     | NULL |    3 |   100.00 | Using where; Using index |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.02 sec)
+
+mysql> EXPLAIN SELECT name,age,pos from staffs WHERE `name` <> 'July';
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table  | partitions | type  | possible_keys         | key                   | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | staffs | NULL       | index | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 140     | NULL |    3 |   100.00 | Using where; Using index |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql>
+```
 ### 7.is null, is not null 也无法使用索引。
+```sql
+mysql> EXPLAIN SELECT name,age,pos from staffs WHERE `name` is null;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+------------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra            |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+------------------+
+|  1 | SIMPLE      | NULL  | NULL       | NULL | NULL          | NULL | NULL    | NULL | NULL |     NULL | Impossible WHERE |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+------------------+
+1 row in set, 1 warning (0.01 sec)
 
+mysql> EXPLAIN SELECT name,age,pos from staffs WHERE `name` is not null;
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table  | partitions | type  | possible_keys         | key                   | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | staffs | NULL       | index | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 140     | NULL |    3 |    66.67 | Using where; Using index |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql>
+```
 ### 8.like以通配符开头('%abc...'),mysql索引失效会变成全表扫描的操作。
+```sql
+CREATE TABLE `tbl_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uname` varchar(20) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `email` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO tbl_user (uname,age,email) VALUES ('1aa1',21,'aaa@163.com');
+INSERT INTO tbl_user (uname,age,email) VALUES ('2aa2',22,'a2@163.com');
+INSERT INTO tbl_user (uname,age,email) VALUES ('3aa3',23,'a3@163.com');
+INSERT INTO tbl_user (uname,age,email) VALUES ('4aa4',24,'a4@163.com');
+```
+
+#### before index
+```sql
+mysql> EXPLAIN SELECT uname,age FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | tbl_user | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |    25.00 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT id FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | tbl_user | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |    25.00 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT uname FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | tbl_user | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |    25.00 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT age FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | tbl_user | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |    25.00 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+mysql> EXPLAIN SELECT * FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | tbl_user | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |    25.00 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT id,uname,age FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | tbl_user | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |    25.00 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+```
+
+#### 创建索引
+```sql
+CREATE INDEX idx_user_unameAge ON tbl_user (uname,age);
+```
+
+```sql
+mysql> EXPLAIN SELECT id FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table    | partitions | type  | possible_keys | key               | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | tbl_user | NULL       | index | NULL          | idx_user_unameAge | 68      | NULL |    4 |    25.00 | Using where; Using index |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT uname FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table    | partitions | type  | possible_keys | key               | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | tbl_user | NULL       | index | NULL          | idx_user_unameAge | 68      | NULL |    4 |    25.00 | Using where; Using index |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT age FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table    | partitions | type  | possible_keys | key               | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | tbl_user | NULL       | index | NULL          | idx_user_unameAge | 68      | NULL |    4 |    25.00 | Using where; Using index |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT uname,age FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table    | partitions | type  | possible_keys | key               | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | tbl_user | NULL       | index | NULL          | idx_user_unameAge | 68      | NULL |    4 |    25.00 | Using where; Using index |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT id,uname,age FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table    | partitions | type  | possible_keys | key               | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | tbl_user | NULL       | index | NULL          | idx_user_unameAge | 68      | NULL |    4 |    25.00 | Using where; Using index |
++----+-------------+----------+------------+-------+---------------+-------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT * FROM tbl_user WHERE uname LIKE '%aa%';
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | tbl_user | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |    25.00 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+```
+
+解决like '%字符串%'，时索引失效的问题。采用覆盖索引的方式。(只查询有索引字段的列)
 
 ### 9.字符串不加单引号索引失效。
+```sql
+mysql> SELECT * FROM staffs WHERE `name` = 5000;
++----+------+-----+-----+---------------------+
+| id | name | age | pos | add_time            |
++----+------+-----+-----+---------------------+
+|  3 | 5000 |  23 | dev | 2018-03-14 07:14:12 |
++----+------+-----+-----+---------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT * FROM staffs WHERE `name` = 5000;
++----+-------------+--------+------------+------+-----------------------+------+---------+------+------+----------+-------------+
+| id | select_type | table  | partitions | type | possible_keys         | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+--------+------------+------+-----------------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | staffs | NULL       | ALL  | idx_staffs_nameAgePos | NULL | NULL    | NULL |    3 |    33.33 | Using where |
++----+-------------+--------+------------+------+-----------------------+------+---------+------+------+----------+-------------+
+1 row in set, 3 warnings (0.00 sec)
+
+mysql> EXPLAIN SELECT * FROM staffs WHERE `name` = '5000';
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------+
+| id | select_type | table  | partitions | type | possible_keys         | key                   | key_len | ref   | rows | filtered | Extra |
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | staffs | NULL       | ref  | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 74      | const |    1 |   100.00 | NULL  |
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT name,age,pos FROM staffs WHERE `name` = '5000';
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------------+
+| id | select_type | table  | partitions | type | possible_keys         | key                   | key_len | ref   | rows | filtered | Extra       |
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------------+
+|  1 | SIMPLE      | staffs | NULL       | ref  | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 74      | const |    1 |   100.00 | Using index |
++----+-------------+--------+------------+------+-----------------------+-----------------------+---------+-------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+```
 
 ### 10.少用or,用它来连接是会索引失效。
+```sql
+mysql> EXPLAIN SELECT * FROM staffs WHERE `name` = 'July' OR `name`= 'z3';
++----+-------------+--------+------------+------+-----------------------+------+---------+------+------+----------+-------------+
+| id | select_type | table  | partitions | type | possible_keys         | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+--------+------------+------+-----------------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | staffs | NULL       | ALL  | idx_staffs_nameAgePos | NULL | NULL    | NULL |    3 |    66.67 | Using where |
++----+-------------+--------+------------+------+-----------------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT name,age,pos FROM staffs WHERE `name` = 'July' OR `name`= 'z3';
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table  | partitions | type  | possible_keys         | key                   | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | staffs | NULL       | range | idx_staffs_nameAgePos | idx_staffs_nameAgePos | 74      | NULL |    2 |   100.00 | Using where; Using index |
++----+-------------+--------+------------+-------+-----------------------+-----------------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+```
+
+### 小结
+假设index(a,b,c)
+WHRER 语句
