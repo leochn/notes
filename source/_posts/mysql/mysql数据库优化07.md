@@ -3,8 +3,7 @@ title: mysql数据库优化07
 date: 2018-03-11 18:39:46
 tags:
 ---
-
-
+## 索引优化
 ```sql
 CREATE TABLE `staffs` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -21,6 +20,8 @@ INSERT INTO staffs(name,age,pos,add_time) VALUES ('z000',23,'dev',NOW());
 
 ALTER TABLE staffs ADD INDEX idx_staffs_nameAgePos(name,age,pos);
 ```
+
+<!-- more -->
 
 ## 索引失效的原因
 ### 1.全值匹配我最爱
@@ -380,5 +381,14 @@ mysql> EXPLAIN SELECT name,age,pos FROM staffs WHERE `name` = 'July' OR `name`= 
 ```
 
 ### 小结
+```
 假设index(a,b,c)
-WHRER 语句
+WHRER 语句                                                     索引是否被使用
+where a = 3;                                                |  Y,使用到a
+where a = 3 and b = 5;                                      |  Y,使用到a，b
+where a = 3 and b = 5 and c = 4;                            |  Y,使用到a,b,c
+where b = 3 或者 where b = 5 and c = 4 或者 where c = 4     |  N
+where a = 3 and c = 5;                                      |  使用到a，但是c不可以，b中间断了
+where a = 3 and b > 5 and c = 6;                            | 使用到a和b，c不能用在范围之后，b断了。
+where a = 3 and b like 'kk%' and c = 6;                     |  a能用，b能用，c不能用
+```
