@@ -1,7 +1,7 @@
 ---
 title: mysql数据库优化07
 date: 2018-03-11 18:39:46
-tags:
+tags: mysql
 ---
 ## 索引优化
 ```sql
