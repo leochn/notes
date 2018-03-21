@@ -176,11 +176,13 @@ CREATE INDEX test_innodb_lock_a ON test_innodb_lock(a);
 CREATE INDEX test_innodb_lock_b ON test_innodb_lock(b);
 ```
 
-2.取消两个session自动提交 set autocommit=0;
-![mysql共享锁](/assets/images/mysql/mysql共享锁006.png)
+2.取消session1自动提交 set autocommit=0;
+
+![mysql行锁001](/assets/images/mysql/mysql行锁001.png)
 
 3.session1 修改 test_innodb_lock 表数据，没有提交，并查询数据(读己之所写,发现已经修改过来了)
 ```sql
+-- session1 修改并查询数据
 mysql> update test_innodb_lock set b='4001' where a=4;
 Query OK, 1 row affected (0.89 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
@@ -204,9 +206,198 @@ mysql> select * from test_innodb_lock;
 mysql>
 ```
 
-4.session2 并查询数据(数据并没有修改过来)
+4.session2 查询数据
+
+数据并没有修改过来,没有出现脏读,并且没有出现表锁的情况
+```sql
+-- session2 查询数据
+# mysql> select * from test_innodb_lock;
++------+------+
+| a    | b    |
++------+------+
+|    1 | a1   |
+|    3 | 3    |
+|    4 | 4000 |
+|    5 | 5000 |
+|    6 | 6000 |
+|    7 | 7000 |
+|    8 | 8000 |
+|    9 | 9000 |
+|    1 | a2   |
++------+------+
+9 rows in set (0.00 sec)
+```
+
+5.session1 进行commit提交
+```sql
+mysql> commit;
+Query OK, 0 rows affected (0.07 sec)
+```
+
+6.session1 进行commit提交后, session2 就能看到session1修改后的数据
+```sql
+mysql> select * from test_innodb_lock;
++------+------+
+| a    | b    |
++------+------+
+|    1 | a1   |
+|    3 | 3    |
+|    4 | 4001 |
+|    5 | 5000 |
+|    6 | 6000 |
+|    7 | 7000 |
+|    8 | 8000 |
+|    9 | 9000 |
+|    1 | a2   |
++------+------+
+9 rows in set (0.00 sec)
+```
+
+7.session1 进行commit提交后, session2 就能看到session1修改后的数据
+
+![mysql行锁002](/assets/images/mysql/mysql行锁002.png)
+
+8.session1 修改第4条数据但不提交,同时session2 也修改第4条数据
+
+session1 修改数据不提交;同时session2 也修改数据,那么 session2 会一直处于阻塞状态(session1出现行锁).
+
+![mysql行锁003](/assets/images/mysql/mysql行锁003.png)
+
+session1 提交后;同时session2 立马抢到锁,修改数据成功.此时session1和session2获取的数据时相同的.
+
+![mysql行锁004](/assets/images/mysql/mysql行锁004.png)
+
+9.session1 修改第4条数据,同时session2修改第5条数据(行锁,能修改不同的行)
+
+![mysql行锁005](/assets/images/mysql/mysql行锁005.png)
+
+#### 索引失效行锁变表锁
+
+1.查看表索引的情况
+```sql
+mysql> show index from test_innodb_lock;
++------------------+------------+--------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table            | Non_unique | Key_name           | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++------------------+------------+--------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| test_innodb_lock |          1 | test_innodb_lock_a |            1 | a           | A         |           8 |     NULL | NULL   | YES  | BTREE      |         |               |
+| test_innodb_lock |          1 | test_innodb_lock_b |            1 | b           | A         |           9 |     NULL | NULL   | YES  | BTREE      |         |               |
++------------------+------------+--------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+2 rows in set (0.03 sec)
+
+mysql> select * from test_innodb_lock;
++------+------+
+| a    | b    |
++------+------+
+|    1 | a1   |
+|    3 | 3    |
+|    4 | 4999 |
+|    5 | 5555 |
+|    6 | 6000 |
+|    7 | 7000 |
+|    8 | 8000 |
+|    9 | 9000 |
+|    1 | a2   |
++------+------+
+9 rows in set (0.00 sec)
+```
+
+2.session1修改第8条数据,session2修改第5条数据
+
+但是session1修改第8条数据的时候,误把varchar类型写成int类型,导致全表扫描,引起表锁,session2修改数据会形成阻塞.
+
+![mysql行锁006](/assets/images/mysql/mysql行锁006.png)
+
+![mysql行锁007](/assets/images/mysql/mysql行锁007.png)
+
+#### 间隙锁
+1.删除第2条数据
+```sql
+mysql> delete from test_innodb_lock where a=2;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from test_innodb_lock;
++------+------+
+| a    | b    |
++------+------+
+|    1 | a1   |
+|    3 | 3    |
+|    4 | 4999 |
+|    5 | 5555 |
+|    6 | 6000 |
+|    7 | 7000 |
+|  810 | 8000 |
+|    9 | 9000 |
+|    1 | a2   |
++------+------+
+9 rows in set (0.00 sec)
+```
+
+2.session1修改条件范围的数据,session插入条件范围的数据
+
+session1修改条件范围的数据的时候，sessoin2插入条件范围的数据操作处于阻塞状态
+![mysql行锁008](/assets/images/mysql/mysql行锁008.png)
+
+session1提交后，sessoin2拿到锁之后才进行插入操作,可以看到session2阻塞了48.03s
+![mysql行锁009](/assets/images/mysql/mysql行锁009.png)
+
+3.总结：
+
+什么是间隙锁：
+
+当我们用范围条件而不是相等条件检索数据，并请求共享或排他锁时，InnoDB会给符合条件的已有数据记录的索引项加锁；对于键值在条件范围内但并不存在的记录，叫做"间隙GAP".
+
+InnoDB也会对这个"间隙"加锁，这种锁机制就是所谓的间隙锁(Next-Key锁).
+
+
+危害：
+
+因为Query执行过程中通过范围查找的话，他会锁定整个范围内所有的索引键值，即使这个键值并不存在。
+
+间隙锁有一个比较致命的弱点，就是当锁定一个范围键值后，即使某些不存在的键值也会被无辜的锁定，而造成在锁定的时候无法插入锁定键值范围内的任何数据。在某些场景下这可能会对性能造成很大的危害。
+
+#### 如何锁定一行
+select xxx for update; 锁定某一行,其他的操作会被阻塞,直到锁定行的会话提交commit.
+
+![mysql如何锁定行001](/assets/images/mysql/mysql如何锁定行001.png)
+
+
+#### 行锁总结
+```sql
+mysql> show status like 'innodb_row_lock%';
++-------------------------------+--------+
+| Variable_name                 | Value  |
++-------------------------------+--------+
+| Innodb_row_lock_current_waits | 0      |
+| Innodb_row_lock_time          | 130185 |
+| Innodb_row_lock_time_avg      | 32546  |
+| Innodb_row_lock_time_max      | 47970  |
+| Innodb_row_lock_waits         | 4      |
++-------------------------------+--------+
+5 rows in set (0.00 sec)
+```
+
+```
+Innodb_row_lock_time:等待总时长
+Innodb_row_lock_time_avg:等待平均时长
+Innodb_row_lock_waits:等待总次数  
+
+尤其是当等待次数很高，而且每次等待时长也不小的时候，就需要分析系统中为什么会有如此多的等待，然后根据分析结果指定优化计划。
+```
+
+优化建议：
+
+1.尽可能让所有数据检索都通过索引来完成，避免无索引行锁升级为表锁。
+
+2.合理设计索引，尽量缩小锁的范围。
+
+3.尽可能较少索引条件，避免间隙锁。
+
+4.尽量控制事务大小，减少锁定资源量和时间长度。
+
+5.尽可能低级别事务隔离。
 
 ### 页锁(介于表锁和行锁之间)
+开销和加锁时间界于表锁和行锁之间，会出现死锁，锁定颗粒度界于表锁和行锁之间，并发度一般。
 
 
 
