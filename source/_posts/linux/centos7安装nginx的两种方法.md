@@ -1,7 +1,7 @@
 ---
 title: centos7安装nginx的两种方法
 date: 2017-07-22 21:47:13
-tags: [nginx,centos7]
+tags: [nginx,centos7,linux]
 ---
 ## centos7安装nginx的两种方法
 ### 第一种方式：通过yum安装

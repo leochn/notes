@@ -1,7 +1,7 @@
 ---
 title: nginx代理wss协议
 date: 2018-02-06 11:18:22
-tags: [linxu,nginx]
+tags: [linux,nginx]
 ---
 ## 需求
 web项目部署在https服务上，该项目需要连接websocket服务，但是websocket服务是部署在http服务上。所以需要通过nginx代理wss协议。

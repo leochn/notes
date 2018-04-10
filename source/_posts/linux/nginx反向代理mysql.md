@@ -1,7 +1,7 @@
 ---
 title: nginx反向代理mysql
 date: 2017-11-27 12:46:59
-tags: [centos7,nginx,mysql]
+tags: [centos7,nginx,mysql,linux]
 ---
 ## nginx反向代理mysql
 公司有一个公网ip,那台服务器上装的nginx, mysql装在公司另外一台服务器上假设ip为 192.168.17.131,我想利用公网ip的3308端口去访问内网电脑上mysql,就可以利用nginx 进行代理。
@@ -138,3 +138,36 @@ stream {
 ### 测试效果
 
 ![nginx支持tcp代理mysql](/assets/images/mysql/nginx支持tcp代理mysql.png)
+
+### 其他代理
+```bash
+upstream redis {
+        hash $remote_addr consistent;
+        server 192.168.17.135:6379 max_fails=3 fail_timeout=30s;
+    }   
+    server {
+        listen 6379;
+        proxy_connect_timeout 30s;
+        proxy_pass redis;
+    }
+    
+    upstream mqtt {
+        hash $remote_addr consistent;
+        server 192.168.17.135:1883 max_fails=3 fail_timeout=30s;
+    }   
+    server {
+        listen 1883;
+        proxy_connect_timeout 30s;
+        proxy_pass mqtt;
+    }
+    
+    upstream mqws {
+        hash $remote_addr consistent;
+        server 192.168.17.135:61614 max_fails=3 fail_timeout=30s;
+    }   
+    server {
+        listen 61614;
+        proxy_connect_timeout 30s;
+        proxy_pass mqws;
+    }
+```
