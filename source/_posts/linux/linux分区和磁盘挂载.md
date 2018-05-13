@@ -44,7 +44,7 @@ sr0           11:0    1  680M  0 rom
 [root@localhost ~]#
 ```
 
-![linux分区和磁盘挂载](/assets/images/linux/01-linux分区和磁盘挂载001.jpg)
+![linux分区和磁盘挂载](/assets/images/linux/linux分区和磁盘挂载001.jpg)
 
 ## 磁盘挂载案例
 需求：给linux系统增加一个新的硬盘，并且挂载到 /home/newdisk
@@ -77,11 +77,11 @@ sr0          iso9660     CentOS 7 x86_64 2016-12-05-23-44-06-00
 
 #### 步骤2,给虚拟机分配硬盘
 
-![linux分区和磁盘挂载](/assets/images/linux/01-linux分区和磁盘挂载002.jpg)
+![linux分区和磁盘挂载](/assets/images/linux/linux分区和磁盘挂载002.jpg)
 
-![linux分区和磁盘挂载](/assets/images/linux/01-linux分区和磁盘挂载003.jpg)
+![linux分区和磁盘挂载](/assets/images/linux/linux分区和磁盘挂载003.jpg)
 
-![linux分区和磁盘挂载](/assets/images/linux/01-linux分区和磁盘挂载004.jpg)
+![linux分区和磁盘挂载](/assets/images/linux/linux分区和磁盘挂载004.jpg)
 
 ##### 增加硬盘后，查看并没有看到新加的硬盘
 
