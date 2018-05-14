@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/chunrudikai/article/details/54134989"/> 
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta name="description" content="临时修改IP
+ifconfig eno16777736 192.168.1.101 
+注意（eno16777736）是默认第一个网络接口名称
+永久修改IP
+第一步：查看网络接口
+ifconfig
+
+
+
+第二步：去对应的网络接口配置文件修改配置，注意文件名称是（ifcfg-默认第一个网络接口名称），文件路径是/etc/sysconfig/network-scripts/
+vim " />
+    <meta name="keywords" content="" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>centos7临时修改IP、永久修改IP - CSDN博客</title>
+    
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-795ec16a0b.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-02ffddfbf5.min.css">
+
+    <script type="text/javascript">
+        var username = "chunrudikai";
+        var blog_address = "https://blog.csdn.net/chunrudikai";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = ""; 
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "https://passport.csdn.net/account/login?from=https://blog.csdn.net/chunrudikai/article/details/54134989"
+        var blogUrl = "https://blog.csdn.net/";
+        var curSkin = "skin3-template";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+        <script type="text/javascript" src="https://csdnimg.cn/pubfooter/js/tracking-1.0.2.js" charset="utf-8"></script>
+        <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.2/css/sandalstrap.min.css"> 
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+</head>
+<body>    
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+    <script src="https://csdnimg.cn/public/sandalstrap/1.2/fonts/csdnc/csdnc.js"></script><link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+    var recommendCount = 10;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = 'centos7临时修改IP、永久修改IP';
+    var ChannelId = 0;
+    var articleId = '54134989';
+    var commentscount = 0;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/chunrudikai/article/details/54134989";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "centos5.3+%E8%AE%BE%E7%BD%AE%E6%B0%B8%E4%B9%85ip";
+    var needInsertBaidu = false;
+</script>
+
+<header>
+	<div class="container d-flex clearfix">
+		<div class="title-box">
+			<h6 class="title-blog">
+				<a href="https://blog.csdn.net/chunrudikai">chunrudikai的博客</a>
+			</h6>
+			<p class="description"></p>
+		</div>
+		<div class="opt-box d-flex justify-content-end">
+			<a class="btn btn-sm" href="https://blog.csdn.net/chunrudikai/rss/list">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#csdnc-rss"></use>
+					</svg>RSS订阅</a>
+					</div>
+	</div>
+</header><script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix pt0" id="mainBox">
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <h3 class="aside-title">个人资料</h3>
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/chunrudikai">
+                <img src="https://avatar.csdn.net/0/7/D/3_chunrudikai.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/chunrudikai" target="_blank" class="text-truncate" id="uid">chunrudikai</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                                <a class="btn btn-sm btn-red-hollow" href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/chunrudikai/article/details/54134989" target="_self">关注</a>
+                            </span>
+            
+        </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+        <dl class="text-center" title="24">
+            <dt>原创</dt>
+            <dd><span class="count">24</span></dd>
+        </dl>
+        <dl class="text-center" title="2">
+            <dt>粉丝</dt>
+            <dd id='fan'><span class="count">2</span></dd>
+        </dl>
+        <dl class="text-center" title="3">
+            <dt>喜欢</dt>
+            <dd><span class="count">3</span></dd>
+        </dl>
+        <dl class="text-center" title="0">
+            <dt>评论</dt>
+            <dd><span class="count">0</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="2级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-2"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="22363">
+                2万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="459">
+                459            </dd>
+        </dl>
+        <dl title="111051">
+            <dt>排名：</dt>
+            <dd>11万+</dd>
+        </dl>
+    </div>
+        <div class="badge-box d-flex">
+        <span>勋章：</span>
+                        <a class="icon-badge" title="持之以恒">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#csdnc-m-lasting"></use>
+            </svg>
+            <div class="icon-arrow"></div>
+            <div class="grade-detail-box item2">
+                <div class="pos-box">
+                    <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#csdnc-m-lasting"></use>
+                        </svg>
+                        <p>持之以恒</p>
+                    </div>
+                    <div class="right-box d-flex justify-content-center align-items-center">
+                        授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！
+                    </div>
+                </div>
+            </div>
+        </a>
+                            </div>
+    </div>		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+        <!-- 投放代码 -->
+        <script type="text/javascript" src="//cee1.iteye.com/lgyyovfyh.js"></script>
+    </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/chunrudikai/article/details/79137649" target="_blank">mysql 查询当天、本周，本月，上一个月的数据</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/chunrudikai/article/details/79137333" target="_blank">Jmeter步骤配置详解</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/chunrudikai/article/details/77878334" target="_blank">JAVA native关键字</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/chunrudikai/article/details/77864961" target="_blank">线程知识总结</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/chunrudikai/article/details/77864147" target="_blank">eclipse导入jdk源码</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    <div id="asideCategory" class="aside-box flexible-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/category/6887325">
+                    Java基础                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/category/6910292">
+                    其他                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/category/6981908">
+                    oracle                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/category/7054281">
+                    tomcat                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/category/7152232">
+                    开发工具技巧                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/category/7418386">
+                    mysql                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideArchive" class="aside-box flexible-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2018/01">
+                    2018年1月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2017/09">
+                    2017年9月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2017/08">
+                    2017年8月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2017/07">
+                    2017年7月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2017/06">
+                    2017年6月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2017/05">
+                    2017年5月                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2017/04">
+                    2017年4月                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2017/03">
+                    2017年3月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/chunrudikai/article/month/2017/01">
+                    2017年1月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+							<li>
+					<a href="https://blog.csdn.net/chunrudikai/article/details/54134989">centos7临时修改IP、永久修改IP</a>
+					<p class="read">阅读量：<span>11854</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/chunrudikai/article/details/77878334">JAVA native关键字</a>
+					<p class="read">阅读量：<span>2046</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/chunrudikai/article/details/54135092">centos7图形界面与dos命令切换</a>
+					<p class="read">阅读量：<span>1959</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/chunrudikai/article/details/54580330">jquery.validate校验问题--组合条件唯一校验</a>
+					<p class="read">阅读量：<span>1709</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/chunrudikai/article/details/69230346">IntelliJ IDEA 使用心得与常用快捷键</a>
+					<p class="read">阅读量：<span>535</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+		    		<div id="asideFooter">
+			
+		<div class="aside-box">
+						<script type="text/javascript" src="//cee1.iteye.com/avneunkwb.js"></script>
+					</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js?20180309" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+    <main>
+        <div class="blog-content-box">
+	<div class="article-title-box">
+			<span class="article-type type-1 float-left">原</span>		<h6 class="title-article">centos7临时修改IP、永久修改IP</h6>
+	</div>
+	<div class="article-info-box">
+		<div class="article-bar-top d-flex">
+												<span class="time">2017年01月06日 10:32:07</span>
+			<div class="float-right">
+				<span class="read-count">阅读数：11924</span>
+											</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+                    <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/htmledit_views-0a60691e80.css" />
+            <div class="htmledit_views">
+                
+<h1>临时修改IP</h1>
+<p>ifconfig eno16777736 192.168.1.101 </p>
+<p>注意（eno16777736）是默认第一个网络接口名称</p>
+<h1>永久修改IP</h1>
+<p align="left">第一步：查看网络接口</p>
+<p>ifconfig</p>
+<p><img src="" alt="" /><br /></p>
+<p></p>
+<p align="left">第二步：去对应的网络接口配置文件修改配置，注意文件名称是（ifcfg-默认第一个网络接口名称），文件路径是/etc/sysconfig/network-scripts/</p>
+<p>vim /etc/sysconfig/network-scripts/ifcfg-网络接口名称</p>
+<p>修改以下配置</p>
+<p>TYPE=Ethernet</p>
+<p><span style="color:#FF0000;">BOOTPROTO=static</span></p>
+<p>DEFROUTE=yes</p>
+<p>IPV4_FAILURE_FATAL=no</p>
+<p>IPV6INIT=yes</p>
+<p>IPV6_AUTOCONF=yes</p>
+<p>IPV6_DEFROUTE=yes</p>
+<p>IPV6_FAILURE_FATAL=no</p>
+<p>NAME=eno16777736</p>
+<p>UUID=9e8d604f-d991-4aa2-88a3-4c679e6f139c</p>
+<p>DEVICE=eno16777736</p>
+<p>ONBOOT=yes</p>
+<p>PEERDNS=yes</p>
+<p>PEERROUTES=yes</p>
+<p>IPV6_PEERDNS=yes</p>
+<p>IPV6_PEERROUTES=yes</p>
+<p><span style="color:#FF0000;">HWADDR=00:0c:29:ce:3f:3c</span>  #MAC地址</p>
+<p><span style="color:#FF0000;">IPADDR=192.168.1.104     </span>#静态IP</p>
+<p><span style="color:#FF0000;">GATEWAY=192.168.1.2     </span>#默认网关</p>
+<p><span style="color:#FF0000;">NETMASK=255.255.255.0    </span>#子网掩码</p>
+<p><span style="color:#FF0000;">DNS1=192.168.1.2         </span>#DNS配置</p>
+<p align="left">第三步：重启网络服务</p>
+<p>servicenetwork restart</p>
+<p></p>
+<p> <img src="" alt="" /></p>
+<h1>其他</h1>
+<p>DEVICE=物理设备名</p>
+<p>IPADDR=IP地址</p>
+<p>NETMASK=掩码值</p>
+<p>NETWORK=网络地址</p>
+<p>BROADCAST=广播地址</p>
+<p>GATEWAY=网关地址</p>
+<p>ONBOOT=[yes|no]（引导时是否激活设备）</p>
+<p>USERCTL=[yes|no]（非root用户是否可以控制该设备）</p>
+<p>BOOTPROTO=[none|static|bootp|dhcp]（引导时不使用协议|静态分配|BOOTP协议|DHCP协议）</p>
+<p>HWADDR= 你的MAC地址</p>
+            </div>
+                </div>
+				<div class="hide-article-box text-center csdn-tracking-statistics tracking-click" data-mod="popu_376">
+			<a class="btn btn-red-hollow" id="btn-readmore">阅读更多</a>
+		</div>
+        	</article>
+	
+		<div class="article-bar-bottom">
+				<div class="article-copyright">
+			版权声明：本文为博主原创文章，未经博主允许不得转载。			https://blog.csdn.net/chunrudikai/article/details/54134989		</div>
+									</div>
+	
+	<!-- !empty($pre_next_article[0]) -->
+		</div>
+<script>
+    $(".MathJax").remove();
+</script>
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config"> 
+    MathJax.Hub.Config({ 
+			"HTML-CSS": { 
+					linebreaks: { automatic: true, width: "94%container" },
+					imageFont: null
+			},
+			tex2jax: {
+				preview: "none"
+			},
+			mml2jax: {
+				preview: 'none'
+			}
+	});
+</script>
+<script>
+	(function(){
+		var btnReadmore = $("#btn-readmore");
+		if(btnReadmore.length>0){
+			var winH = $(window).height();
+			var articleBox = $("div.article_content");
+			var artH = articleBox.height();
+			if(artH > winH*2){
+				articleBox.css({
+					'height':winH*2+'px',
+					'overflow':'hidden'
+				})
+				btnReadmore.click(function(){
+					articleBox.removeAttr("style");
+					$(this).parent().remove();
+				})
+			}else{
+				btnReadmore.parent().remove();
+			}
+		}
+	})()
+</script>        <div class="edu-promotion"></div>
+        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<a href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/chunrudikai/article/details/54134989#commentBox" class="btn btn-sm btn-red">我来说一句</a>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>        <div class="recommend-box">
+            		<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/dulgao/article/details/54691851" target="_blank" strategy="BlogCommendFromBaidu_1">
+				CentOS命令行<em>修改</em><em>IP</em>地址			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/dulgao/article/details/54691851" target="_blank" >
+				一、CentOS <em>修改</em><em>IP</em>地址 
+<em>修改</em>对应网卡的<em>IP</em>地址的配置文件 如果只有一张网卡就是eth0，类推 
+# vi /etc/sysconfig/network-scr<em>ip</em>ts/ifcfg-eth...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/dulgao" title="dulgao" target="_blank">
+					<img src="https://avatar.csdn.net/1/1/A/3_dulgao.jpg" alt="dulgao" class="avatar-pic">
+					<span class="name">dulgao</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2017-01-23 10:40:49</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：4631</span>
+			</p>
+		</div>
+	</div>
+					<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/shuaigexiaobo/article/details/74388155" target="_blank" strategy="BlogCommendFromBaidu_0">
+				Centos如何设置<em>IP</em>地址,LINUX怎么<em>修改</em><em>IP</em>地址			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/shuaigexiaobo/article/details/74388155" target="_blank" >
+				今天接触到了一个新的任务，<em>修改</em>Linux的<em>IP</em>地址。采用的是浪潮的服务器，操作系统为<em>CentOS7</em>。
+    （一）为了能够让<em>IP</em>地址<em>永久</em>生效。首先进入编辑 vi /etc/sysconfig/ne...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/shuaigexiaobo" title="shuaigexiaobo" target="_blank">
+					<img src="https://avatar.csdn.net/C/D/D/3_shuaigexiaobo.jpg" alt="shuaigexiaobo" class="avatar-pic">
+					<span class="name">shuaigexiaobo</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2017-07-05 10:37:21</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：18040</span>
+			</p>
+		</div>
+	</div>
+				<div class="recommend-item-box recommend-ad-box" id="ad1">
+
+							<script>
+				(function() {
+					var s = "_" + Math.random().toString(36).slice(2);
+					document.write('<div id="' + s + '"></div>');
+					(window.slotbydup=window.slotbydup || []).push({
+						id: '4765209',
+						container: s,
+						size: '808,120',
+						display: 'inlay-fix'
+					});
+				})();
+				</script>
+				<script src="http://dup.baidustatic.com/js/os.js"></script>
+
+			
+		</div>
+				<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/dyllove98/article/details/41013821" target="_blank" strategy="BlogCommendFromBaidu_3">
+				CentOS 6.5 配置<em>IP</em>地址的三种方法			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/dyllove98/article/details/41013821" target="_blank" >
+				实验软件环境：虚拟机Vmware
+ Workstation10.0 、CentOS 6.5 32位
+
+
+
+
+
+
+1、自动获取<em>IP</em>地址
+
+虚拟机使用桥接模式，相当于连接到物理机的网络里，物理机网络有DH...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/dyllove98" title="dyllove98" target="_blank">
+					<img src="https://avatar.csdn.net/3/C/2/3_dyllove98.jpg" alt="dyllove98" class="avatar-pic">
+					<span class="name">dyllove98</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2014-11-11 17:01:33</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：36337</span>
+			</p>
+		</div>
+	</div>
+					<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/dreamsunday/article/details/49406655" target="_blank" strategy="BlogCommendFromBaidu_4">
+				Linux配置CentOS<em>永久</em><em>IP</em>地址			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/dreamsunday/article/details/49406655" target="_blank" >
+				重启网络服务：service network restart			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/dreamsunday" title="dreamsunday" target="_blank">
+					<img src="https://avatar.csdn.net/2/5/B/3_dreamsunday.jpg" alt="dreamsunday" class="avatar-pic">
+					<span class="name">dreamsunday</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2015-10-25 21:15:48</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：4519</span>
+			</p>
+		</div>
+	</div>
+					<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/willhuo/article/details/51321233" target="_blank" strategy="BlogCommendFromBaidu_5">
+				linux<em>临时</em>设置<em>ip</em>地址和网关的命令			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/willhuo/article/details/51321233" target="_blank" >
+				ifconfig eth0 192.168.1.33  netmask  255.255.255.0 up
+
+eth0是要设置的网卡,192.168.1.33是要设置的<em>IP</em>,255.255.255...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/willhuo" title="willhuo" target="_blank">
+					<img src="https://avatar.csdn.net/8/E/8/3_willhuo.jpg" alt="willhuo" class="avatar-pic">
+					<span class="name">willhuo</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2016-05-05 11:13:26</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：11143</span>
+			</p>
+		</div>
+	</div>
+					<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/fbd2011/article/details/7307392" target="_blank" strategy="BlogCommendFromBaidu_6">
+				CentOS(RedHat)命令行<em>临时</em><em>修改</em><em>IP</em>地址、网关、DNS			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/fbd2011/article/details/7307392" target="_blank" >
+				文章作者：Slyar 文章来源：Slyar Home (www.slyar.com)
+ 转载请注明，谢谢合作。
+
+Linux<em>临时</em><em>修改</em><em>IP</em>地址、网关、主机名、DNS，马上生效，无需重启(重启后失效...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/fbd2011" title="fbd2011" target="_blank">
+					<img src="https://avatar.csdn.net/0/5/A/3_fbd2011.jpg" alt="fbd2011" class="avatar-pic">
+					<span class="name">fbd2011</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2012-02-29 19:24:19</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：1654</span>
+			</p>
+		</div>
+	</div>
+					<div class="recommend-item-box recommend-ad-box" id="a_d_feed_0">
+			<script>
+				var width = $("div.recommend-box").outerWidth() - 48;
+				NEWS_FEED({
+					w: width,
+					h: 90,
+					showid: 'Afihld',
+					placeholderId: 'a_d_feed_0',
+					inject: 'define',
+					define: {
+						imagePosition: 'right',
+						imageBorderRadius: 0,
+						imageWidth: 120,
+						imageHeight: 90,
+						imageFill: 'clip',
+						displayImage: true,
+						displayTitle: true,
+						titleFontSize: 20,
+						titleFontColor: '#333',
+						titleFontFamily: 'Microsoft Yahei',
+						titleFontWeight: 'bold',
+						titlePaddingTop: 0,
+						titlePaddingRight: 0,
+						titlePaddingBottom: 10,
+						titlePaddingLeft: 0,
+						displayDesc: true,
+						descFontSize: 14,
+						descFontColor: '#6b6b6b',
+						descFontFamily: 'Microsoft Yahei',
+						paddingTop: 0,
+						paddingRight: 0,
+						paddingBottom: 0,
+						paddingLeft: 0,
+						backgroundColor: '#fff',
+						hoverColor: '#ca0c16'
+					}
+				})
+			</script>
+		</div>
+			<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/lsm135/article/details/51824132" target="_blank" strategy="BlogCommendFromBaidu_7">
+				<em>centos7</em>-设置<em>ip</em>地址-<em>ip</em>v4			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/lsm135/article/details/51824132" target="_blank" >
+				http://blog.csdn.net/johnnycode/article/details/40624403
+
+
+
+
+原文链接：http://blog.csdn.net/johnnycode/ar...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/lsm135" title="lsm135" target="_blank">
+					<img src="https://avatar.csdn.net/2/0/3/3_lsm135.jpg" alt="lsm135" class="avatar-pic">
+					<span class="name">lsm135</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2016-07-04 22:08:42</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：25745</span>
+			</p>
+		</div>
+	</div>
+					<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/liliang199/article/details/78290731" target="_blank" strategy="BlogCommendFromBaidu_8">
+				<em>ip</em> 命令 和ifconfig 命令 删除<em>IP</em>			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/liliang199/article/details/78290731" target="_blank" >
+				使用ifconfig命令添加一个V<em>IP</em>后，如果需要将这个V<em>IP</em>删除，可以使用ifconfig V<em>IP</em> down命令。
+
+
+但是，如果操作顺序不当，V<em>IP</em>会仍然留在系统缓存中，这时，使用ifcon...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/liliang199" title="liliang199" target="_blank">
+					<img src="https://avatar.csdn.net/2/3/1/3_liliang199.jpg" alt="liliang199" class="avatar-pic">
+					<span class="name">liliang199</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2017-10-19 23:21:47</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：1326</span>
+			</p>
+		</div>
+	</div>
+					<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/norsd/article/details/72887733" target="_blank" strategy="BlogCommendFromBaidu_9">
+				Linux 设置<em>永久</em><em>ip</em>地址的方法			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/norsd/article/details/72887733" target="_blank" >
+				Centos 6.5 
+查看 /etc/sysconfig/network-scr<em>ip</em>ts/ 
+找到对应的网卡配置文件 
+如果没有，可以创建一个 
+形如: ifcfg-Auto_devicename ...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/norsd" title="norsd" target="_blank">
+					<img src="https://avatar.csdn.net/B/F/3/3_norsd.jpg" alt="norsd" class="avatar-pic">
+					<span class="name">norsd</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2017-06-06 21:34:46</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：1367</span>
+			</p>
+		</div>
+	</div>
+					<div class="recommend-item-box csdn-tracking-statistics" data-mod="popu_387" data-poputype="feed"  data-feed-show="false"  data-dsm="post">
+		<h4 class="text-truncate">
+			<a href="https://blog.csdn.net/get_set/article/details/50707553" target="_blank" strategy="BlogCommendFromBaidu_10">
+				<em>CentOS7</em> <em>修改</em>设置静态<em>IP</em>和DNS			</a>
+		</h4>
+		<p class="content">
+			<a href="https://blog.csdn.net/get_set/article/details/50707553" target="_blank" >
+				用虚拟机装了个CentOS，使用的NAT的网络模式，为了防止再次启动系统的时候网络<em>IP</em>发生变化，因此设置静态<em>IP</em>和DNS。本文介绍了<em>CentOS7</em>中设置静态<em>IP</em>和DNS的方法。...			</a>
+		</p>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/get_set" title="get_set" target="_blank">
+					<img src="https://avatar.csdn.net/0/C/5/3_get_set.jpg" alt="get_set" class="avatar-pic">
+					<span class="name">get_set</span>
+				</a>
+			</p>
+			<p>
+				<span class="date">2016-02-21 11:13:25</span>
+			</p>
+			<p>
+				<span class="read-num">阅读数：23654</span>
+			</p>
+		</div>
+	</div>
+			            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+</div>
+<div class="mask-dark"></div>
+<div class="report-box">
+    <div class="pos-box">
+        <h2 class="title">不良信息举报</h2>
+        <a class="btn-close">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#csdnc-times"></use>
+            </svg>
+        </a>
+        <form id="frmReport">
+            <div class="form-box">
+                <div class="txt-row-box">
+                    <label class="title" id="reptTit">举报内容：</label>
+                    <p class="rpt-title text-truncate">centos7临时修改IP、永久修改IP</p>
+                </div>
+                <div class="txt-row-box">
+                    <label class="title">举报原因：</label>
+                    <div class="rdo-box">
+                        <label><input type="radio" class="rdo-chk report-type" id="report_sex" name="report_type" value="1">色情</label>
+                        <label><input type="radio" class="rdo-chk report-type" id="report_Politics" name="report_type" value="2">政治</label>
+                        <label><input type="radio" class="rdo-chk report-type" id="report_copy" name="report_type" value="3">抄袭</label>
+                        <label><input type="radio" class="rdo-chk report-type" id="report_ad" name="report_type" value="4">广告</label>
+                        <label><input type="radio" class="rdo-chk report-type" id="report_want" name="report_type" value="5">招聘</label>
+                        <label><input type="radio" class="rdo-chk report-type" id="report_call" name="report_type" value="6">骂人</label>
+                        <label><input type="radio" class="rdo-chk report-type" id="report_other" name="report_type" value="7">其他</label>
+                    </div>
+                </div>
+                <div class="txt-row-box" id="rptOriginalurl">
+                    <label class="title">原文地址：</label>
+                    <div class="txt-box">
+                        <input class="ipt" type="text" name="originalurl">
+                    </div>
+                </div>
+                <div class="txt-row-box">
+                    <label class="title">原因补充：</label>
+                    <div class="txt-box">
+                        <textarea class="ipt ipt-textarea" name="description" maxlength="30"></textarea>
+                        <p class="remark">最多只允许输入30个字</p>
+                    </div>
+                </div>
+            </div>
+            <div class="opt-box text-right">
+                <input type="reset" class="btn btn-link-gray btn-close" value="取消">
+                <input type="submit" class="btn btn-red btn-submit" value="提交">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">加入CSDN，享受更精准的内容推荐，与500万程序员共同成长！</span>
+		<div class="pulllog-btn float-right clearfix">
+            <button class="pulllog-login float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                登录
+            </button>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li>
+			<button class="btn-like " title="点赞">
+				<svg class="icon active" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg><svg class="icon no-active" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<p>0</p>
+			</button>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc" title="目录">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg><br>目录
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark" title="收藏">
+				<svg class="icon active" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg><svg class="icon no-active" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg><br>收藏
+			</button>
+		</li>
+		<li>
+			<a class="btn-comments" title="评论" href="#commentBox">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg><br>评论
+			</a>
+		</li>
+				<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_weixin" data-cmd="weixin" title="微信分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-wechat"></use>
+				</svg><br>微信
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_tsina" data-cmd="tsina" title="微博分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-weibo"></use>
+				</svg><br>微博
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_qzone" data-cmd="qzone" title="QQ分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-qq"></use>
+				</svg><br>QQ
+			</a>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.2/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,'centos7临时修改IP、永久修改IP');
+        }
+    })
+</script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-bd54b21308.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-7e4640c7ab.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-46c7bd3d86.min.js"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=centos5.3+%E8%AE%BE%E7%BD%AE%E6%B0%B8%E4%B9%85ip"  type="text/javascript"></script>
+</body>
+<div class="box-box-default">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//cee1.iteye.com/mhzzjepzz.js"></script>
+</div>
+<div class="box-box-large">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//cee1.iteye.com/idvveasfs.js"></script>
+</div>
+</html>
