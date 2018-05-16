@@ -33,15 +33,31 @@ tags:
 [root@localhost ~]#
 ```
 
-#### 查看有谁在线(哪些人登录到了服务器)
+#### who查看有谁在线(哪些人登录到了服务器)
 
-who 查看当前在线
+1.who 查看当前在线
 
 ```bash
 [root@localhost ~]# who
 root     pts/0        2018-05-14 06:29 (192.168.17.1)
 root     pts/1        2018-05-14 07:07 (192.168.17.130)
 [root@localhost ~]#
+```
+
+2.在linux /var/log/wtmp 日志中以二进制的形式记录了用户登陆的时间和登陆IP，用who 命令可以查看
+who /var/log/wtmp
+
+```bash
+[root@hadoop /]# who /var/log/wtmp
+root     tty1         2017-05-01 15:33
+root     pts/0        2017-05-01 15:36 (192.168.17.1)
+root     pts/0        2017-05-01 15:39 (192.168.17.1)
+root     tty1         2017-07-05 19:53
+root     pts/0        2017-07-05 19:54 (192.168.17.1)
+root     pts/0        2017-07-08 16:47 (192.168.17.1)
+root     pts/1        2017-07-08 16:48 (192.168.17.1)
+[root@hadoop /]# who /var/log/wtmp | grep 192.168.17.1 |wc -l
+140
 ```
 
 #### 文件操作
@@ -70,13 +86,7 @@ root     pts/1        2018-05-14 07:07 (192.168.17.130)
 ```
 
 
-
-
-
-
 ## linux增强操作
-### 基本的用户管理
-
 ### 系统管理操作
 #### 统计文件或文件夹
 
@@ -112,10 +122,91 @@ tmpfs                  98M     0   98M    0% /run/user/0
 [root@localhost ~]#
 ```
 
+#### wc命令
+
+Linux wc命令用于计算字数。
+
+利用wc指令我们可以计算文件的Byte数、字数、或是列数，若不指定文件名称、或是所给予的文件名为"-"，则wc指令会从标准输入设备读取数据。
+
+- -c或--bytes或--chars 只显示Bytes数。
+- -l或--lines 只显示行数。
+- -w或--words 只显示字数。
+
+```bash
+[root@hadoop ~]# cat test.txt 
+123.0.0.1
+1234.0.1
+12356
+12345
+12
+123.0.0.1
+1234
+567
+5678
+56
+586
+123.0.0.1
+
+[root@hadoop ~]# cat test.txt | grep 123.0.0.1 | wc 
+      3       3      30
+[root@hadoop ~]# cat test.txt | grep 123.0.0.1 | wc -l
+3
+[root@hadoop ~]# cat test.txt | grep 123.0.0.1 | wc -c
+30
+[root@hadoop ~]# cat test.txt | grep 123.0.0.1 | wc -w
+3
+[root@hadoop ~]#
+```
+
+查看linux系统登录的ip信息：
+
+```
+[root@hadoop ~]# who /var/log/wtmp
+root     tty1         2017-05-01 15:33
+root     pts/0        2017-05-01 15:36 (192.168.17.1)
+root     pts/0        2017-05-01 15:39 (192.168.17.1)
+root     tty1         2017-07-05 19:53
+root     pts/0        2017-07-05 19:54 (192.168.17.1)
+root     pts/0        2017-07-08 16:47 (192.168.17.1)
+root     pts/1        2017-07-08 16:48 (192.168.17.1)
+root     pts/2        2017-07-08 17:26 (192.168.17.1)
+[root@hadoop ~]# who /var/log/wtmp | grep 192.168.17.1 |wc -l
+6
+[root@hadoop ~]#
+```
+
 #### 进程管理
 
+Centos7中systemctl命令详解:
+
+LinuxSystemctl是一个系统管理守护进程、工具和库的集合，用于取代System V、service和chkconfig命令，初始进程主要负责控制systemd系统和服务管理器。通过Systemctl –help可以看到该命令主要分为：查询或发送控制命令给systemd服务，管理单元服务的命令，服务文件的相关命令，任务、环境、快照相关命令，systemd服务的配置重载，系统开机关机相关的命令。
+
+```
+系统中是否安装有systemd并确定当前安装的版本
+# systemctl --version
+检查systemctl的二进制文件和库文件的安装位置
+# whereis systemctl
+列出所有可用单元 
+# systemctl list-unit-files
+ 列出所有运行中单元 
+# systemctl list-units
+ 列出所有失败单元 
+# systemctl –failed
+检查某个单元（如 crond.service）是否启用 
+# systemctl is-enabled crond.service
+获取当前某个服务的CPU分配额（如nginx）
+# systemctl show -p CPUShares nginx
+检查某个服务的所有配置细节
+# systemctl show nginx
+```
 
 ### SSH免密码登录配置
+
+
+
+
+
+
 
 
 ### 网络管理
@@ -255,7 +346,11 @@ HWADDR= 你的MAC地址
 
 #### 网络服务管理
 
+
+
 #### linux的网卡坏了怎么办
+
+
 
 ### 高级文本处理命令
 
@@ -301,21 +396,327 @@ echo $PATH | cut -d':' -f 3-        #将PATH变量取出，找出第3个到最�
 
 #### sed命令
 
+##### 删除行: d 命令
 ```
-1.删除: d 命令
+1.删除行: d 命令
   sed '2d' example          # 删除example文件的第2行
   sed '2,$d' example        # 删除example文件的第2行到末尾所有行
   sed '$d' example          # 删除example文件的最后1行
   sed '/test/'d example     # 删除example文件中,所有包含test的行
+
+[root@hadoop ~]# cat test.txt 
+aaaaaaaaaaa1
+bbbbbbbbbbb2
+ccccc333333
+dddd444444
+eeeeee555555
+fffff666666
+gggggg777777
+8888888888
+9999999999999
+[root@hadoop ~]# sed 2d test.txt 
+aaaaaaaaaaa1
+ccccc333333
+dddd444444
+eeeeee555555
+fffff666666
+gggggg777777
+8888888888
+9999999999999
 ```
 
+##### 新增行：a 命令
+```
+2.新增行：a 命令
+其中a命令表示在指定行的后面附加一行，1a则是在第一行的后面添加一行，添加的内容就是a后面的内容，如果a的前面没有地址限定则在所有行的后面都会添加指定的字符串.
+[root@hadoop ~]# cat test.txt 
+a
+b
+c
+d
+[root@hadoop ~]# sed '1a hello sed' test.txt 
+a
+hello sed
+b
+c
+d
+[root@hadoop ~]#
+```
 
+##### 替换行：c 命令
+```
+3.替换行：c 命令
+命令c会替换指定的行的所有内容，替换成其后面的字符串，所有的新增，删除，替换行，这些命令前面的地址修饰都可以指定地址空间，也都可以使用正则表达式，命令会应用在选出的符合地址条件的所有行上面.例如：
+[root@hadoop ~]# cat test.txt 
+a
+b
+c
+d
+[root@hadoop ~]# sed '1c hello world' test.txt
+hello world
+b
+c
+d
+[root@hadoop ~]# sed '/^b/c hello world' test.txt
+a
+hello world
+c
+d
+[root@hadoop ~]#
+替换以b开头的行，其内容是c命令后面的字符串
+```
+
+##### 替换部分字符串而不是整行：s 命令
+
+```
+4.替换部分字符串而不是整行：s 命令
+
+## 我们这里说的就是s命令，执行的结果是我们文件中的 bc 被替换成 BC
+[root@hadoop ~]# cat test.txt 
+a
+bcdefg
+cgdsag
+d
+[root@hadoop ~]# sed 's/bc/BC/' test.txt
+a
+BCdefg
+cgdsag
+d
+
+## 可以看到第6行的ccaa中的aa是没有被替换的，也就是说此时仅仅替换了每一行搜索到的第一个aa字符串进行操作，那么如果要对一行里面的所有的符合条件的字符串都做替换操作呢，我们可以使用参数g。在最后一个斜杠后面加上g选项之后，表示进行全局替换，也就是说一行中所有符合条件的旧字符串都会被替换成新字符串，而不仅仅是第一个。
+[root@hadoop ~]# cat test.txt 
+11 aa
+22 bb
+33 cc
+23 dd
+55 2e
+66 aaff ccaa
+zz ggaa
+[root@hadoop ~]# sed 's/aa/AA/' test.txt
+11 AA
+22 bb
+33 cc
+23 dd
+55 2e
+66 AAff ccaa
+zz ggAA
+[root@hadoop ~]# sed 's/aa/AA/g' test.txt
+11 AA
+22 bb
+33 cc
+23 dd
+55 2e
+66 AAff ccAA
+zz ggAA
+
+## 可以看到仅仅对第一行进行了替换操作，1s 。
+[root@hadoop ~]# sed '1s/aa/AA/g' test.txt
+11 AA
+22 bb
+33 cc
+23 dd
+55 2e
+66 aaff ccaa
+zz ggaa
+
+## 我们在s命令前面添加了 /^[0-9]/ 这个修饰，该正则表达式表示对所有以数字开头的行，执行s操作。
+[root@hadoop ~]# sed '/^[0-9]/s/aa/AA/g' test.txt
+11 AA
+22 bb
+33 cc
+23 dd
+55 2e
+66 AAff ccAA
+zz ggaa
+
+## 另外一个要说明的是  s/待替换的字符串/新字符串/ 这种格式中 / 作为分隔符并不是一定的，当使用s命令时候，我们可以使用别的分隔符，实际上s后面紧接着的字符就是分隔符，所以不一定是 / 符号。例如：
+echo 'aabbccaadd' | sed s#aa#AA#g
+输出：
+AAbbccAAdd
+这里s命令后面跟着的#符号被当作分隔符了
+```
+
+##### 搜索并输出行内容
+
+```
+sed还提供一个p命令用于搜索符合条件的行，并输出该行的内容，而不做其他的任何修改，例如：
+//test.txt
+11 aa
+22 bb
+33 cc
+23 dd
+
+sed '2p' test.txt
+
+输出：
+11 aa
+22 bb
+22 bb
+33 cc
+23 dd
+
+可以看到第二行被输出来了，但是sed好像将文件的所有内容输出了一遍，而第2行则多输出了一次，实际上sed默认情况下是会将所有标准输入的数据又重新输出到标准输出的，我们可以加上 -n 选项让sed仅仅是输出经过处理之后的那些行，而不是输出之前从标准输入中获取到的所有行内容，例如：
+
+sed -n '2p' test.txt
+
+输出：
+22 bb
+
+这样仅仅会输出p命令的处理结果了，-n 选项一般是与p命令联合使用的，其他的增加，删除，替换行的命令是不需要 -n 选项的
+```
+
+##### 将修改应用到文件中
+
+```
+我们之前做的所有实验，实际上都没有修改test.txt文件的内容，也就是说我们看到的修改结果仅仅输出到控制台上，而文件test.txt的内容是没有修改的，我们可以使用 -i 选项告诉sed直接修改文件的内容，而不是将修改结果输出到终端上，例如：
+sed -i '2d' test.txt 
+命令运行之后，我们发现test.txt的第2行没有了
+
+[root@hadoop ~]# cat test.txt 
+11 aa
+22 bb
+33 cc
+23 dd
+[root@hadoop ~]# sed -i '2d' test.txt
+[root@hadoop ~]# cat test.txt 
+11 aa
+33 cc
+23 dd
+[root@hadoop ~]#
+```
+
+##### sed正则中的元字符
+
+```
+我们知道sed中的命令前面可以使用地址范围进行限制，表示对文件的某些符合条件的行执行相应的操作，其中我们可以使用正则表达式选出要操作的行，而sed中正则的语法可能与我们其他命令的正则语法有一些不同，这里我们有必要列出sed中常用的正则元字符：
+
+$ 表示行尾 
+^ 表示行首
+[a-z0-9]表示字符范围
+[^]表示除了字符集中的字符以外的字符 
+
+sed的正则中  \(\)  和 \{m,n\} 需要转义 
+. 表示任意字符  
+* 表示零个或者多个  
+\+ 一次或多次　　
+\? 零次或一次    
+\| 表示或语法
+
+```
 
 #### awk命令
 
+##### 简介
+
+awk是一个强大的文本分析工具，相对于grep的查找，sed的编辑，awk在其对数据分析并生成报告时，显得尤为强大。简单来说awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。
+
+awk有3个不同版本: awk、nawk和gawk，未作特别说明，一般指gawk，gawk 是 AWK 的 GNU 版本。
+
+awk其名称得自于它的创始人 Alfred Aho 、Peter Weinberger 和 Brian Kernighan 姓氏的首个字母。实际上 AWK 的确拥有自己的语言： AWK 程序设计语言 ， 三位创建者已将它正式定义为“样式扫描和处理语言”。它允许您创建简短的程序，这些程序读取输入文件、为数据排序、处理数据、对输入执行计算以及生成报表，还有无数其他的功能。
+
+通常，awk是以文件的一行为处理单位的。awk每接收文件的一行，然后执行相应的命令，来处理文本。
+
+##### 入门实例
+
+```
+## 假设last -n 5的输出如下:
+[root@hadoop ~]# last -n 5
+root     pts/0        192.168.17.1     Tue May 15 05:49   still logged in   
+reboot   system boot  3.10.0-693.2.2.e Tue May 15 05:47 - 06:46 (2+00:58)   
+root     pts/0        192.168.17.1     Tue May 15 05:45 - crash  (00:02)    
+reboot   system boot  3.10.0-693.2.2.e Tue May 15 05:44 - 06:46 (2+01:02)   
+root     pts/0        192.168.17.1     Mon May 14 21:50 - crash  (07:53)    
+
+wtmp begins Mon May  1 15:32:50 2017
+[root@hadoop ~]# 
+
+## 如果只是显示最近登录的5个帐号
+[root@hadoop ~]# last -n 5 | awk  '{print $1}'last -n 5 | awk  '{print $1}'
+root
+reboot
+root
+reboot
+root
+
+wtmp
+[root@hadoop ~]#
+awk工作流程是这样的：读入有’\n’换行符分割的一条记录，然后将记录按指定的域分隔符划分域，填充域，0则表示所有域,1表示第一个域,n表示第n个域。默认域分隔符是"空白键"或"[tab]键",所以1表示登录用户，$3表示登录用户ip,以此类推。
 
 
+### 如果只是显示/etc/passwd的账户
+#cat /etc/passwd |awk  -F ':'  '{print $1}'  
+root
+daemon
+bin
+sys
+1
+2
+3
+4
+5
+这种是awk+action的示例，每行都会执行action{print $1}。
+-F指定域分隔符为":" 。
+如果只是显示/etc/passwd的账户和账户对应的shell,而账户与shell之间以tab键分割
+#cat /etc/passwd |awk  -F ':'  '{print \$1"\t"\$7}'
+root    /bin/bash
+daemon  /bin/sh
+bin     /bin/sh
+sys     /bin/sh
+```
 
+#####　print和printf
+
+awk中同时提供了print和printf两种打印输出的函数。
+
+其中print函数的参数可以是变量、数值或者字符串。字符串必须用双引号引用，参数用逗号分隔。如果没有逗号，参数就串联在一起而无法区分。这里，逗号的作用与输出文件的分隔符的作用是一样的，只是后者是空格而已。
+
+printf函数，其用法和c语言中printf基本相似,可以格式化字符串,输出复杂时，printf更加好用，代码更易懂。
+
+##### 实例:获取java应用的进程id
+
+```
+[root@izuf6ajbxrke67fngx1q5nz ~]# ps aux|grep service-data
+root      9443  4.7  4.2 7852068 693936 ?      Sl   May16  51:32 java -jar service-data-0.0.1-SNAPSHOT.jar --server.port=8080 --spring.profiles.active=data-pro
+root     12998  0.0  0.0 112660   980 pts/1    S+   06:40   0:00 grep --color=auto service-data
+[root@izuf6ajbxrke67fngx1q5nz ~]# echo `ps aux|grep service-data|grep -v grep|awk '{print $2}'`
+9443
+[root@izuf6ajbxrke67fngx1q5nz ~]#
+```
+
+说明: grep -v grep 的含义
+
+```
+grep -v grep | grep -v tail 
+1、第一部分 “grep -v grep" 在文档中过滤掉包含有grep字符的行
+2、第二部分“grep -v tail” 在第一部分过滤掉之后再过滤掉剩余文档中包含有tail字符的行
+3、总结一下就是：这条命令的意思就是过滤掉文档中包含字符“grep”和“tail”的行
+```
+
+##### awk编程变量和赋值
+
+除了awk的内置变量，awk还可以自定义变量。
+
+下面统计/etc/passwd的账户人数
+
+```
+#awk '{count++;print $0;} END{print "user count is ", count}' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+......
+user count is  401234
+```
+
+count是自定义变量。之前的action{}里都是只有一个print,其实print只是一个语句，而action{}可以有多个语句，以;号隔开。
+
+这里没有初始化count，虽然默认是0，但是妥当的做法还是初始化为0:
+
+```
+#awk 'BEGIN {count=0;print "[start]user count is ", count} {count=count+1;print $0;} END{print "[end]user count is ", count}' /etc/passwd
+
+[start]user count is  0
+root:x:0:0:root:/root:/bin/bash
+...
+[end]user count is  40
+```
 
 ## linux上软件安装
 
@@ -376,28 +777,7 @@ yum install -y telnet
     cp redis.conf /usr/local/redis
 6.启动redis
 	cd /usr/local/redis
-	bin/redis-server redis.conf
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
+	bin/redis-server redis.conf  
 ```
 
 
