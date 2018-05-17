@@ -202,6 +202,174 @@ LinuxSystemctl是一个系统管理守护进程、工具和库的集合，用于
 
 ### SSH免密码登录配置
 
+#### 工作机制
+
+传统的网络服务程序，如FTP、POP和Telnet其本质上都是不安全的；因为它们在网络上用明文传送数据、用户帐号和用户口令，很容易受到中间人（man-in-the-middle）攻击方式的攻击。
+
+而SSH是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。利用SSH协议可以有效防止远程管理过程中的信息泄露问题。通过SSH可以对所有传输的数据进行加密，也能够防止DNS欺骗和IP欺骗。 SSH传输的数据是经过压缩的，所以可以加快传输的速度。SSH有很多功能，它既可以代替Telnet，又可以为FTP、POP、甚至为PPP提供一个安全的「通道」。 了解这么多就好了，其实ssh连接也就是可以理解成经过加密的远程访问啦。
+
+ssh的具体实现是有客户端和服务端的软件组成的。
+
+服务端是一个守护进程sshd，它在后台运行并响应来着客户端的连接请求。
+
+客户端包含ssh程序以及向scp（远程拷贝）、slogin（远程登录）、sftp（安全文件传输）等其他的应用程序。
+
+#### 认证机制
+
+从客户端来看，SSH提供两种级别的安全验证。
+
+##### 账号口令验证
+
+直接输入所要登陆的用户的口令是默认的方式。不需要修改配置文件。
+
+如果直接从客户端将用户密码传输到服务器，那么密码信息很容易被中间人截获，从而实现重放攻击。ssh的实现方式是：
+
+1.客户端向ssh服务器发出请求，服务器将自己的公钥返回给客户端；
+
+2.客户端用服务器的公钥加密自己的登录密码，再将信息发送给服务器；
+
+3.服务器接收到客户端传送的密码，用自己的私钥解码，如果结果正确，则同意登录，建立起连接。
+
+这种方式还是有漏洞的，中间人可以假扮成服务器，骗取客户端的密码。
+
+##### RSA加密验证
+
+rsa加密验证方式，充分利用了非对称加密体系的优势，不需要在网络传输密码，完全杜绝了中间人攻击的可能。步骤如下：
+
+准备工作
+
+-1.客户端先使用 ssh-keygen 命令，生成私钥和公钥。按照默认配置，私钥会被保存在~/.ssh/id_rsa中，公钥则在~/.ssh/id_rsa.pub中。(一般别修改这里的文件)
+
+0.客户端通过安全的方式将公钥发送给服务器。在服务器端，将客户端发的公钥写入到~/.ssh/authorized_keys文件末尾。
+
+建立连接
+
+1.客户端发出申请。服务器产生session密钥对，返回通过对应客户端的公钥加密后的session公钥。
+
+2.客户端用自己的密钥解密信息，得到session公钥。
+
+3.之后的数据交互，都通过对方方公钥加密，对方收到信息后，用其私钥解密，实现安全加密过程。
+
+##### ssh免密码登录配置
+
+1.实现效果：
+
+有两台服务器："192.168.17.130" 和 "192.168.17.128"
+
+需要实现：在服务器"192.168.17.130"上实现ssh无密码连接服务器"192.168.17.128"
+
+2.实现步骤：
+
+1）. 在"192.168.17.130"服务器上使用"ssh-keygen -t rsa"命令来创建公钥。
+(会问你存放的目录，如果不需要修改，直接回车两次即可，默认保存路径为"~/.ssh/")
+
+ssh-keygen -t rsa -C app[@163.com](mailto:zzyybs@126.com), 然后回车
+
+代码参数含义： -t 指定密钥类型，默认是 rsa ，可以省略。 -C 设置注释文字，比如邮箱。
+
+2）. 再将 192.168.17.130 服务器自己的公钥拷贝并追加到 192.168.17.128 服务器的授权列表文件 authorized_keys中。
+
+也可以直接一条命令: ssh-copy-id 192.168.17.128  (推荐用这条命令)
+
+```bash
+[root@hadoop ~]# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:WcDY9eG1sFXugexglTri+fCbigDgjwLGIPe9/kAW+gc root@hadoop
+The key's randomart image is:
++---[RSA 2048]----+
+|       +... o.+..|
+|      . o. ooB.o |
+|o..   .   .o=o...|
+|=... o . +.oo  ..|
+|.+ .o E S o ..  .|
+|o o .+ o +       |
+|.. . .+ . +      |
+|.    ..o.  o.    |
+|      .o...o.    |
++----[SHA256]-----+
+[root@hadoop ~]# cd .ssh/
+[root@hadoop .ssh]# pwd
+/root/.ssh
+[root@hadoop .ssh]# ll
+总用量 12
+-rw------- 1 root root 1679 5月  18 06:14 id_rsa
+-rw-r--r-- 1 root root  393 5月  18 06:14 id_rsa.pub
+-rw-r--r-- 1 root root  176 5月  14 07:00 known_hosts
+[root@hadoop .ssh]# cat id_rsa.pub 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDORn9j++aARyD0pAK4SVOHQNqcUG8+DpUVHrmMurBAhcd7FGdihVnFK5pI+/SJjpGhtUfV1IRqc9xTOOvtMhoL1NPP7x6qzYjwJVKF+0FBsXpu1IipwFKi4HFhyaic1m8/llBHKNRXUTUYP3ayK9lctRXHW/QMwe4el9VhnzkO9SJjYFl24Eg1R14dABaKKYPilBaUDsCTojin1cruHktUIv3QuTqFdnQiqnIL6sH9spSWTOgOJr63+hE1wYFc/lRZKsLoyq8QXQRwqvBSKkoRijLb4aeo1Qvj+gWCus8zFYteo+iqlyad1KfHdZTYxX0nvz7Mr/yZF1V/BT5ZqXg5 root@hadoop
+[root@hadoop .ssh]# ssh 192.168.17.128
+root@192.168.17.128's password: 
+Last login: Fri May 18 06:21:07 2018 from 192.168.17.1
+[root@localhost ~]# ll -a
+dr-xr-x---.  6 root root    4096 12月 24 07:48 .
+dr-xr-xr-x. 17 root root     224 5月   1 2017 ..
+-rw-------.  1 root root    1247 5月   1 2017 anaconda-ks.cfg
+-rw-------.  1 root root    9572 5月  14 07:41 .bash_history
+-rw-r--r--.  1 root root      18 12月 29 2013 .bash_logout
+-rw-r--r--.  1 root root     176 12月 29 2013 .bash_profile
+-rw-r--r--.  1 root root     176 12月 29 2013 .bashrc
+-rw-r--r--.  1 root root     100 12月 29 2013 .cshrc
+drwxr-xr-x.  2 root root       6 10月 16 2017 my_registry
+-rw-------.  1 root root       0 8月  11 2017 .mysql_history
+drwxr-xr-x.  2 root root      40 7月  21 2017 .oracle_jre_usage
+drwxr-----.  3 root root      19 9月  28 2017 .pki
+drwxr-xr-x.  3 root root      51 12月 24 07:54 software
+-rw-r--r--.  1 root root     129 12月 29 2013 .tcshrc
+[root@localhost ~]# exit
+登出
+Connection to 192.168.17.128 closed.
+[root@hadoop .ssh]# ssh-copy-id 192.168.17.128
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@192.168.17.128's password: 
+Permission denied, please try again.
+root@192.168.17.128's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh '192.168.17.128'"
+and check to make sure that only the key(s) you wanted were added.
+
+[root@hadoop .ssh]# ssh 192.168.17.128
+Last failed login: Fri May 18 06:33:32 CST 2018 from 192.168.17.130 on ssh:notty
+There was 1 failed login attempt since the last successful login.
+Last login: Fri May 18 06:32:50 2018 from 192.168.17.130
+[root@localhost ~]# ll -a
+dr-xr-x---.  7 root root    4096 5月  18 06:33 .
+dr-xr-xr-x. 17 root root     224 5月   1 2017 ..
+-rw-------.  1 root root    1247 5月   1 2017 anaconda-ks.cfg
+-rw-r--r--.  1 root root 9347946 7月  27 2017 apache-tomcat-9.0.0.M22.tar.gz
+-rw-------.  1 root root    9572 5月  14 07:41 .bash_history
+-rw-r--r--.  1 root root      18 12月 29 2013 .bash_logout
+-rw-r--r--.  1 root root     176 12月 29 2013 .bash_profile
+-rw-r--r--.  1 root root     176 12月 29 2013 .bashrc
+-rw-r--r--.  1 root root     100 12月 29 2013 .cshrc
+drwxr-xr-x.  2 root root       6 10月 16 2017 my_registry
+-rw-r--r--.  1 root root   25680 7月  29 2017 mysql57-community-release-el7-11.noarch.rpm
+-rw-------.  1 root root       0 8月  11 2017 .mysql_history
+drwxr-xr-x.  2 root root      40 7月  21 2017 .oracle_jre_usage
+drwxr-----.  3 root root      19 9月  28 2017 .pki
+drwxr-xr-x.  3 root root      51 12月 24 07:54 software
+drwx------.  2 root root      29 5月  18 06:33 .ssh
+-rw-r--r--.  1 root root     129 12月 29 2013 .tcshrc
+[root@localhost ~]# cd .ssh/
+[root@localhost .ssh]# ll
+总用量 4
+-rw-------. 1 root root 393 5月  18 06:33 authorized_keys
+[root@localhost .ssh]# cat authorized_keys 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDORn9j++aARyD0pAK4SVOHQNqcUG8+DpUVHrmMurBAhcd7FGdihVnFK5pI+/SJjpGhtUfV1IRqc9xTOOvtMhoL1NPP7x6qzYjwJVKF+0FBsXpu1IipwFKi4HFhyaic1m8/llBHKNRXUTUYP3ayK9lctRXHW/QMwe4el9VhnzkO9SJjYFl24Eg1R14dABaKKYPilBaUDsCTojin1cruHktUIv3QuTqFdnQiqnIL6sH9spSWTOgOJr63+hE1wYFc/lRZKsLoyq8QXQRwqvBSKkoRijLb4aeo1Qvj+gWCus8zFYteo+iqlyad1KfHdZTYxX0nvz7Mr/yZF1V/BT5ZqXg5 root@hadoop
+[root@localhost .ssh]#
+```
+
+
+
 
 
 
@@ -782,7 +950,96 @@ yum install -y telnet
 
 
 
+## shell脚本部署java应用
 
+### 在本机部署java应用
+
+```bash
+[root@hadoop ~]# cat metaconf.sh
+#!/bin/sh
+# Remote SSH Execute
+cd /newSpringbootJars
+oldFile=$(sha256sum /watermis/metaconf-0.0.1-SNAPSHOT.jar|cut -d ' ' -f1)
+newFile=$(sha256sum /newSpringbootJars/metaconf-0.0.1-SNAPSHOT.jar|cut -d ' ' -f1)
+echo oldfile: ${oldFile}
+echo newfile: ${newFile}
+if [ "$oldFile" == "$newFile" ];then
+    echo "file hasn't been changed,current operation finished"
+    exit
+else
+    echo "file has been changed,start update"
+    cp -f /newSpringbootJars/metaconf-0.0.1-SNAPSHOT.jar /watermis
+    echo "file has been transfered to the remote server successfully !"
+fi
+
+cd /watermis
+
+echo `ps aux|grep metaconf|grep -v grep|awk '{print $2}'`
+ps aux|grep metaconf|grep -v grep|awk '{print $2}'|xargs kill -9
+
+nohup java -jar metaconf-0.0.1-SNAPSHOT.jar --server.port=9093  --spring.profiles.active=pro > metaconf.log &
+
+echo done!
+```
+
+### 在局域网内部署java应用
+
+```bash
+[root@hadoop ~]# cat historicalData.sh
+#!/bin/sh
+# Remote SSH Execute
+cd /newSpringbootJars
+oldFile=$(sha256sum /watermis/historical-data-0.0.1-SNAPSHOT.jar|cut -d ' ' -f1)
+newFile=$(sha256sum /newSpringbootJars/historical-data-0.0.1-SNAPSHOT.jar|cut -d ' ' -f1)
+echo oldfile: ${oldFile}
+echo newfile: ${newFile}
+if [ "$oldFile" == "$newFile" ];then
+    echo "file hasn't been changed,current operation finished"
+    exit
+else
+    echo "file has been changed,start update"
+    cp -f /newSpringbootJars/historical-data-0.0.1-SNAPSHOT.jar /watermis
+    scp historical-data-0.0.1-SNAPSHOT.jar 10.0.0.26:~
+    echo "file has been transfered to the remote server successfully !"
+fi
+
+ssh root@10.0.0.26 -tt << remotessh
+    appPID=\$(ps aux|grep historical-data|grep -v grep|awk '{print \$2}')
+    echo "Current historical-data PID: " \${appPID}
+    mv -f /root/historical-data-0.0.1-SNAPSHOT.jar /watermis
+    kill -9 \$appPID
+    cd /watermis
+    nohup java -jar historical-data-0.0.1-SNAPSHOT.jar --server.port=9097 --spring.profiles.active=historical-data-pro > historical-data.log &
+exit
+remotessh
+echo done!
+```
+
+### 在shell.sh脚本中修改其他文件的内容
+
+```bash
+cat >>/root/test.txt<<EOF
+hello shell
+EOF
+```
+
+```bash
+[root@hadoop ~]# cat test.txt 
+11 aa
+33 cc
+23 dd
+[root@hadoop ~]# cat shell.sh 
+cat >>/root/test.txt<<EOF
+hello shell
+EOF
+[root@hadoop ~]# ./shell.sh 
+[root@hadoop ~]# cat test.txt 
+11 aa
+33 cc
+23 dd
+hello shell
+[root@hadoop ~]#
+```
 
 
 
