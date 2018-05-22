@@ -3,6 +3,8 @@ title: linux基本操作
 date: 2018-05-14 06:05:08
 tags:
 ---
+linux的一些基本操作
+<!-- more -->
 
 ## linux基础操作
 ### linux常用命令
