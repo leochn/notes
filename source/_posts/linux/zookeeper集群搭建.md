@@ -229,4 +229,267 @@ Mode: follower
 ```
 
 ## zookeeper客户端连接
-运行zkCli.sh -server ip 进入命令行工具
+### 客户端连接
+    运行zkCli.sh -server ip 进入命令行工具,
+    如果 ./zkCli.sh,则直接连接到本机的zookeeper服务端.
+    如果 ./zkCli.sh -server 192.168.17.131,则直接连接到本机的zookeeper服务端.
+    [root@node-3 bin]# ./zkCli.sh
+    [root@node-2 bin]# ./zkCli.sh -server 192.168.17.132
+
+```
+[root@node-3 bin]# ll
+总用量 36
+-rwxr-xr-x. 1 root root  232 5月  23 06:02 README.txt
+-rwxr-xr-x. 1 root root 1937 5月  23 06:02 zkCleanup.sh
+-rwxr-xr-x. 1 root root 1056 5月  23 06:02 zkCli.cmd
+-rwxr-xr-x. 1 root root 1534 5月  23 06:02 zkCli.sh
+-rwxr-xr-x. 1 root root 1759 5月  23 06:02 zkEnv.cmd
+-rwxr-xr-x. 1 root root 2696 5月  23 06:02 zkEnv.sh
+-rwxr-xr-x. 1 root root 1089 5月  23 06:02 zkServer.cmd
+-rwxr-xr-x. 1 root root 6773 5月  23 06:02 zkServer.sh
+[root@node-3 bin]# ./zkCli.sh 
+Connecting to localhost:2181
+2018-05-23 21:40:17,225 [myid:] - INFO  [main:Environment@100] - Client environment:zookeeper.version=3.4.12-e5259e437540f349646870ea94dc2658c4e44b3b, built on 03/27/2018 03:55 GMT
+2018-05-23 21:40:17,229 [myid:] - INFO  [main:Environment@100] - Client environment:host.name=node-3
+2018-05-23 21:40:17,229 [myid:] - INFO  [main:Environment@100] - Client environment:java.version=1.8.0_141
+2018-05-23 21:40:17,249 [myid:] - INFO  [main:Environment@100] - Client environment:java.vendor=Oracle Corporation
+2018-05-23 21:40:17,249 [myid:] - INFO  [main:Environment@100] - Client environment:java.home=/usr/local/src/java/jdk1.8.0_141/jre
+2018-05-23 21:40:17,249 [myid:] - INFO  [main:Environment@100] - Client environment:java.class.path=/export/server/zookeeper/bin/../build/classes:/export/server/zookeeper/bin/../build/lib/*.jar:/export/server/zookeeper/bin/../lib/slf4j-log4j12-1.7.25.jar:/export/server/zookeeper/bin/../lib/slf4j-api-1.7.25.jar:/export/server/zookeeper/bin/../lib/netty-3.10.6.Final.jar:/export/server/zookeeper/bin/../lib/log4j-1.2.17.jar:/export/server/zookeeper/bin/../lib/jline-0.9.94.jar:/export/server/zookeeper/bin/../lib/audience-annotations-0.5.0.jar:/export/server/zookeeper/bin/../zookeeper-3.4.12.jar:/export/server/zookeeper/bin/../src/java/lib/*.jar:/export/server/zookeeper/bin/../conf:.:/usr/local/src/java/jdk1.8.0_141/lib/dt.jar:/usr/local/src/java/jdk1.8.0_141/lib/tools.jar
+2018-05-23 21:40:17,249 [myid:] - INFO  [main:Environment@100] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+2018-05-23 21:40:17,249 [myid:] - INFO  [main:Environment@100] - Client environment:java.io.tmpdir=/tmp
+2018-05-23 21:40:17,250 [myid:] - INFO  [main:Environment@100] - Client environment:java.compiler=<NA>
+2018-05-23 21:40:17,250 [myid:] - INFO  [main:Environment@100] - Client environment:os.name=Linux
+2018-05-23 21:40:17,250 [myid:] - INFO  [main:Environment@100] - Client environment:os.arch=amd64
+2018-05-23 21:40:17,250 [myid:] - INFO  [main:Environment@100] - Client environment:os.version=3.10.0-693.2.2.el7.x86_64
+2018-05-23 21:40:17,250 [myid:] - INFO  [main:Environment@100] - Client environment:user.name=root
+2018-05-23 21:40:17,250 [myid:] - INFO  [main:Environment@100] - Client environment:user.home=/root
+2018-05-23 21:40:17,250 [myid:] - INFO  [main:Environment@100] - Client environment:user.dir=/export/server/zookeeper/bin
+2018-05-23 21:40:17,251 [myid:] - INFO  [main:ZooKeeper@441] - Initiating client connection, connectString=localhost:2181 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@255316f2
+Welcome to ZooKeeper!
+2018-05-23 21:40:17,393 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1028] - Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+JLine support is enabled
+2018-05-23 21:40:17,669 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@878] - Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+[zk: localhost:2181(CONNECTING) 0] 2018-05-23 21:40:17,738 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1302] - Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x3000086aaf10000, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+```
+
+### 创建节点
+```
+create [-s] [-e] path data acl
+-s表示序列化节点
+-e表示临时节点，不加表示永久节点
+acl用来进行权限控制
+临时节点,客户端断开连接后,zookeeper会在一段时间后自动删除该临时节点
+```
+
+```
+WatchedEvent state:SyncConnected type:None path:null
+[zk: 192.168.17.132(CONNECTED) 0] create /hellozk 123 
+Created /hellozk
+[zk: 192.168.17.132(CONNECTED) 1] ls /
+[zookeeper, hellozk]
+[zk: 192.168.17.132(CONNECTED) 2] create -e /zktemp 123456
+Created /zktemp
+[zk: 192.168.17.132(CONNECTED) 3] ls /
+[zookeeper, zktemp, hellozk]
+[zk: 192.168.17.132(CONNECTED) 4] ls /
+[zookeeper, zktemp, hellozk]
+[zk: 192.168.17.132(CONNECTED) 5] create -s /a 12abcd
+Created /a0000000002
+[zk: 192.168.17.132(CONNECTED) 6] ls
+[zk: 192.168.17.132(CONNECTED) 7] ls /
+[a0000000002, zookeeper, zktemp, hellozk]
+[zk: 192.168.17.132(CONNECTED) 8]
+[zk: 192.168.17.132(CONNECTED) 9] create -s /hellozk/a 56789
+Created /hellozk/a0000000000
+[zk: 192.168.17.132(CONNECTED) 10] ls /
+[a0000000002, zookeeper, zktemp, hellozk]
+[zk: 192.168.17.132(CONNECTED) 11] ls /hellozk/
+Command failed: java.lang.IllegalArgumentException: Path must not end with / character
+[zk: 192.168.17.132(CONNECTED) 12] ls /hellozk/a
+Node does not exist: /hellozk/a
+[zk: 192.168.17.132(CONNECTED) 16] ls /hellozk  
+[a0000000000]
+[zk: 192.168.17.132(CONNECTED) 17]
+```
+
+### 读取节点
+```
+ls path [watch]
+get path [watch]
+ls2 path [watch]
+```
+
+```
+[zk: 192.168.17.132(CONNECTED) 19] get /
+
+cZxid = 0x0
+ctime = Thu Jan 01 08:00:00 CST 1970
+mZxid = 0x0
+mtime = Thu Jan 01 08:00:00 CST 1970
+pZxid = 0x4200000005
+cversion = 2
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 0
+numChildren = 4
+[zk: 192.168.17.132(CONNECTED) 20] ls /
+[a0000000002, zookeeper, zktemp, hellozk]
+[zk: 192.168.17.132(CONNECTED) 21] ls2 /
+[a0000000002, zookeeper, zktemp, hellozk]
+cZxid = 0x0
+ctime = Thu Jan 01 08:00:00 CST 1970
+mZxid = 0x0
+mtime = Thu Jan 01 08:00:00 CST 1970
+pZxid = 0x4200000005
+cversion = 2
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 0
+numChildren = 4
+[zk: 192.168.17.132(CONNECTED) 29] get /hellozk
+123
+cZxid = 0x4200000003
+ctime = Wed May 23 21:49:05 CST 2018
+mZxid = 0x4200000003
+mtime = Wed May 23 21:49:05 CST 2018
+pZxid = 0x4200000006
+cversion = 1
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 3
+numChildren = 1
+[zk: 192.168.17.132(CONNECTED) 30]
+```
+
+### 更新节点
+```
+set path data [version]
+data 就是要更新的内容，version表示数据版本.
+```
+
+```
+[zk: 192.168.17.132(CONNECTED) 29] get /hellozk
+123
+cZxid = 0x4200000003
+ctime = Wed May 23 21:49:05 CST 2018
+mZxid = 0x4200000003
+mtime = Wed May 23 21:49:05 CST 2018
+pZxid = 0x4200000006
+cversion = 1
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 3
+numChildren = 1
+[zk: 192.168.17.132(CONNECTED) 30] set /hellozk 123456
+cZxid = 0x4200000003
+ctime = Wed May 23 21:49:05 CST 2018
+mZxid = 0x4200000007
+mtime = Wed May 23 22:14:13 CST 2018
+pZxid = 0x4200000006
+cversion = 1
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 6
+numChildren = 1
+[zk: 192.168.17.132(CONNECTED) 31]
+```
+
+### 删除节点
+```
+dalete path [version]
+若删除节点存在子节点，那么无法删除该节点，必须先删除子节点，再删除父节点.
+rmr path : 可以递归删除节点
+```
+
+```
+[zk: 192.168.17.132(CONNECTED) 31] delete /hellozk
+Node not empty: /hellozk
+[zk: 192.168.17.132(CONNECTED) 32] ls /hellozk
+[a0000000000]
+[zk: 192.168.17.132(CONNECTED) 34] rmr /hellozk
+[zk: 192.168.17.132(CONNECTED) 35] ls /
+[a0000000002, zookeeper, zktemp]
+[zk: 192.168.17.132(CONNECTED) 36]
+```
+
+## ZooKeeper Watcher
+ZooKeeper 提供了分布式数据的发布/订阅功能。一个典型的发布/订阅模型系统定义了一种一对多的订阅关系，能够让多个订阅者同时监听某一个主题对象，当这个主题自身状态变化时，会通知所有订阅者，试它们能够做出相应的处理。
+
+在 ZooKeeper 中，引入了 Watcher 机制来实现这种分布式的通知功能。ZooKeeper 允许客户端向服务端注册一个 Watcher 监听，当服务器的一些特定事件触发了这个 Watcher，那么就会向指定客户端发送一个事件通知来实现分布式的通知功能。
+
+总的来说watcher包括以下三个过程：客户端向
+
+### Watcher工作机制
+ZooKeeper的Watcher机制，总的来说可以分为三个过程：客户端向服务端注册 Watcher、服务器处理Watcher、客户端回调Watcher得到触发时间的情况。
+
+### shell客户端设置watcher
+#### 设置节点数据变动监听: get /a watch
+```
+[zk: 192.168.17.132(CONNECTED) 37] ls /
+[a0000000002, zookeeper, zktemp, w]
+[zk: 192.168.17.132(CONNECTED) 38] get /w
+123
+cZxid = 0x420000000b
+ctime = Wed May 23 22:33:51 CST 2018
+mZxid = 0x420000000b
+mtime = Wed May 23 22:33:51 CST 2018
+pZxid = 0x420000000b
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 3
+numChildren = 0
+[zk: 192.168.17.132(CONNECTED) 39] get /w watch
+123
+cZxid = 0x420000000b
+ctime = Wed May 23 22:33:51 CST 2018
+mZxid = 0x420000000b
+mtime = Wed May 23 22:33:51 CST 2018
+pZxid = 0x420000000b
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 3
+numChildren = 0
+[zk: 192.168.17.132(CONNECTED) 40]
+```
+
+#### 通过另一个客户端更改节点数据: set /a hello12222
+```
+[zk: localhost:2181(CONNECTED) 4] set /w abcdefg123456
+cZxid = 0x420000000b
+ctime = Wed May 23 22:33:51 CST 2018
+mZxid = 0x420000000c
+mtime = Wed May 23 22:34:40 CST 2018
+pZxid = 0x420000000b
+cversion = 0
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 13
+numChildren = 0
+[zk: localhost:2181(CONNECTED) 5]
+```
+
+#### 设置监听的节点会受到通知
+注意：watch监听是一次性触发的,一旦生效后,下次有同样的事件发生,这里也得不到通知;
+
+如果想要再次得到监听,需要再次进行注册.
+
+```
+[zk: 192.168.17.132(CONNECTED) 40] 
+WATCHER::
+
+WatchedEvent state:SyncConnected type:NodeDataChanged path:/w
+```
