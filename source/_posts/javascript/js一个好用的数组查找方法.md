@@ -58,24 +58,28 @@ https://blog.csdn.net/chemmuxin1993/article/details/53747696
 
         //对象数组
         var arr = [{
+            id : '2',
+            name : 'cm5x',
+            age : 23
+        },{
             id : '1',
             name : 'cmx',
             age : 23
         },{
-            id : '2',
+            id : '5',
             name : '习大大',
             age : 60
         }];
         console.log(arr);
 
         //单个特征查找
-        console.log(findArray(arr, {id: '1'}));
+        console.log(findArray(arr, {id: '5'}));  // 2
 
         //多个特征全满足查找
-        console.log(findArray(arr, {id: '1', name: 'cmx'},false));
+        console.log(findArray(arr, {id: '1', name: 'cmx',age:23})); //1
 
-        //多个特征单个满足查找（只需满足其中一个）
-        console.log(findArray(arr, {id: '1', name: '习大大'}, false));
+        //多个特征单个满足查找（false,表示需要全部满足）
+        console.log(findArray(arr, {id: '5', name: '习大大',age:60},false));  //0
 
     </script>
 </head>
