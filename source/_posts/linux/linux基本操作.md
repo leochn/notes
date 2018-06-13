@@ -1,7 +1,7 @@
 ---
 title: linux基本操作
 date: 2018-05-14 06:05:08
-tags:
+tags: linux
 ---
 linux的一些基本操作
 <!-- more -->
