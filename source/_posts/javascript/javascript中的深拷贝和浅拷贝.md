@@ -188,8 +188,16 @@ console.log(y.b.f === x.b.f);     // true
 </html>
 ```
 
+## json对象的深拷贝
+```
+json对象的深拷贝可以用下面的两条语句实现
+JSON.parse(jsonstr);     //可以将json字符串转换成json对象 
+JSON.stringify(jsonobj); //可以将json对象转换成json对符串
+```
 
-
-
-
-
+```js
+var str = JSON.stringify(resultData);
+console.log(str);
+var jsonObj = JSON.parse(str)
+console.log(jsonObj[0].children[0].children[1].name);
+``` 
