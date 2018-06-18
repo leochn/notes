@@ -1,7 +1,7 @@
 ---
 title: java+mysql递归拼接树形JSON列表
 date: 2017-11-08 07:02:07
-tags:
+tags: java
 ---
 在做java web项目时，前端控件例如国家-省-市-区-县等树形列表，常常需要多级树形json数据，例如：
 <!-- more -->

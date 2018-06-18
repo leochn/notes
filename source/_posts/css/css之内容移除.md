@@ -1,7 +1,7 @@
 ---
 title: css之内容移除
 date: 2017-06-25 07:16:56
-tags:
+tags: css
 ---
 ## css之内容移除
 常用于logo 优化

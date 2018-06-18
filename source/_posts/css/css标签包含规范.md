@@ -1,7 +1,7 @@
 ---
 title: css标签包含规范
 date: 2017-06-25 07:15:29
-tags:
+tags: css
 ---
 ## css标签包含规范
 div可以包含所有的标签。
