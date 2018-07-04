@@ -370,16 +370,23 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDORn9j++aARyD0pAK4SVOHQNqcUG8+DpUVHrmMurBA
 [root@localhost .ssh]#
 ```
 
-
-
-
-
-
-
-
-
-
 ### 网络管理
+#### uname命令
+```
+用于打印当前系统相关信息（内核版本号、硬件架构、主机名称和操作系统类型等）
+uname(选项)
+-a或--all：显示全部的信息；
+-m或--machine：显示电脑类型；
+-n或-nodename：显示在网络上的主机名称；
+-r或--release：显示操作系统的发行编号；
+-s或--sysname：显示操作系统名称；
+-v：显示操作系统的版本；
+-p或--processor：输出处理器类型或"unknown"；
+-i或--hardware-platform：输出硬件平台或"unknown"；
+-o或--operating-system：输出操作系统名称；
+--help：显示帮助；
+--version：显示版本信息。
+```
 #### 主机名配置
 查看主机名:hostname
 
