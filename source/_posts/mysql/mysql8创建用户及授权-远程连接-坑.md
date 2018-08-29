@@ -46,6 +46,7 @@ select host, user, authentication_string, plugin from user;
 ```
 GRANT ALL ON *.* TO 'root'@'%';
 GRANT ALL ON 表示所有权限，% 表示通配所有 host，可以访问远程。
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '你自己的密码';
 ```
 ### 刷新权限
 ```
