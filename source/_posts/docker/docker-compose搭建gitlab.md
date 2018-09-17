@@ -64,6 +64,23 @@ drwxr-xr-x 20 polkitd root  334 6月  17 21:09 log
 ```
 [root@node-1 gitlab]# systemctl start docker
 [root@node-1 gitlab]# docker stack deploy -c docker-compose-gitlab.yml gitlab
+This node is not a swarm manager. Use "docker swarm init" or "docker swarm join" to connect this node to swarm and try again.
+[root@node-1 gitlab]# docker swarm init   ## 因为只有一台服务器,一个docker,所以这台docker
+就是主节点,不添加其他从节点
+Swarm initialized: current node (bbmwq37hyrs70hyl3mhvuwr95) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join \
+    --token SWMTKN-1-335ra3v9fjekj9lrtm2qivp8pbp6ldfx7zbnjgmbhw8ugapuff-09fqvc9vgxtc7u86gwtc5q3fd \
+    10.0.0.29:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+[root@node-1 gitlab]# docker node ls   ## 查看docker的node节点,只有一个node节点
+ID                            HOSTNAME                STATUS              AVAILABILITY        MANAGER STATUS
+bbmwq37hyrs70hyl3mhvuwr95 *   node-1   Ready               Active              Leader
+[root@node-1 gitlab]# docker stack deploy -c docker-compose-gitlab.yml gitlab   ## 运行命令
 ```
 
 ### 查看是否启动成功(启动过程需要一些时间)
@@ -112,7 +129,7 @@ Docs项目的仓库地址需要修改:
 [root@node-1 gitlab]# pwd
 /data/docker/gitlab
 [root@node-1 gitlab]# cd config/
-[root@node-1 config]# vim gitlab.rb
+[root@node-1 config]# vim gitlab.rb     ##　external_url 'http://192.168.17.130:8889'
 [root@node-1 gitlab]# docker service rm z2tfwmj9jdya
 z2tfwmj9jdya
 [root@node-1 gitlab]# docker service ls
