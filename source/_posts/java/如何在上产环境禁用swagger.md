@@ -1,7 +1,7 @@
 ---
 title: 如何在上产环境禁用swagger
 date: 2017-12-21 10:02:35
-tags: java
+tags: [java,swagger]
 ---
 ## swagger的集成
 SpringMVC集成springfox-swagger2和springfox-swagger-ui很简单，只需要两步:
