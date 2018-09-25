@@ -1,7 +1,7 @@
 ---
 title: centos7配置squid正向代理
 date: 2017-11-27 12:59:09
-tags: [centos7,squild]
+tags: [centos7,squid]
 ---
 ## 需求
 在一些实验室环境，服务器(内网服务器B)没有直接连接外网的权限，需要通过其他服务器(上网服务器A)进行网络代理。
