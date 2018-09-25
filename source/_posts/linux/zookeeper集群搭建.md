@@ -1,7 +1,7 @@
 ---
 title: zookeeper集群搭建
 date: 2018-05-22 19:00:26
-tags: [linux,ZooKeeper]
+tags: [linux,zookeeper]
 ---
 ## zookeeper特性
 
