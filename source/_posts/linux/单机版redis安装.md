@@ -78,6 +78,7 @@ Hint: It's a good idea to run 'make test' ;)
 make[1]: 离开目录“/opt/redis-4.0.11/src”
 [root@node-1 redis-4.0.11]#
 ```
+
 ## make install
 ```
 [root@node-1 redis-4.0.11]# pwd
@@ -189,7 +190,7 @@ OK
 
 ### redis配置
 1.把源码中的redis.conf复制到bin目录下
-```bash
+```
 [root@node-1 redis]# pwd
 /data/redis
 [root@node-1 redis]# ll
@@ -235,7 +236,7 @@ logfile "../logs/redis.log"
 ```
 
 ### 后端启动
-​```
+```
 [root@node-1 bin]# netstat -ano | grep 6379
 [root@node-1 bin]# ./redis-server redis.conf 
 [root@node-1 bin]# netstat -ano | grep 6379
@@ -271,7 +272,6 @@ not connected>
 ```
 需要永久配置密码的话就去redis.conf的配置文件中找到requirepass这个参数，如下配置：
 修改redis.conf配置文件　　
-# requirepass foobared
 requirepass redisadmin   指定密码redisadmin
 保存后重启redis就可以了
 ```
@@ -432,7 +432,7 @@ CONF="/data/redis/bin/redis.conf"
 
 ### 注册系统服务
 #### chkconfig --add redis
-```bash
+```
 [root@node-2 init.d]# chkconfig --add redis
 [root@node-2 init.d]# 
 [root@node-2 init.d]# service redis start
