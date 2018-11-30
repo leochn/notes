@@ -6,7 +6,7 @@ tags: hexo
 ## hexo搭建
 ```
 LEO@LAPTOP-GDA5CI61 MINGW64 /d/workspace-leo/notes (master)
-$ hexo new "windows下强制杀死进程"
+$ hexo new "hello-hexo"
 bash: hexo: command not found
 
 LEO@LAPTOP-GDA5CI61 MINGW64 /d/workspace-leo/notes (master)
