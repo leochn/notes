@@ -438,8 +438,108 @@ WARNING: Attempting to execute replacement "hdfs --daemon stop" instead.
 [root@mini-1 hadoop-3.1.1]#
 ```
 
+#### 配置文件说明
+```
+Hadoop 配置文件分两类:
+默认配置文件和自定义配置文件，只有用户想修改某一默认配置值时,才需要修改自定义配置文件, 更改相应属性值
+
+(1).默认配置文件：存放在 hadoop 相应的 jar 包中
+[core-default.xml]
+hadoop-common-3.1.1.jar/ core-default.xml
+[hdfs-default.xml]
+hadoop-hdfs-3.1.1.jar/ hdfs-default.xml
+[yarn-default.xml]
+hadoop-yarn-common-3.1.1.jar/ yarn-default.xml
+[core-default.xml]
+hadoop-mapreduce-client-core-3.1.1.jar/ core-default.xml
+
+(2).自定义配置文件： 存放在$HADOOP_HOME/etc/hadoop
+core-site.xml
+hdfs-site.xml
+yarn-site.xml
+mapred-site.xml
+```
 
 ## 完全分布式部署Hadoop
+### 虚拟机准备
+```
+准备3台虚拟机
+配置主机名和hosts文件(同2.1)
+安装jdk
+配置SSH免密码登录
+```
+### scp
+```
+scp可以实现服务器与服务器之间的数据拷贝
+
+实例
+1.从本地复制到远程
+命令格式：
+  scp local_file remote_username@remote_ip:remote_folder 
+或者 
+  scp local_file remote_username@remote_ip:remote_file 
+或者 
+  scp local_file remote_ip:remote_folder 
+或者 
+  scp local_file remote_ip:remote_file 
+
+第1,2个指定了用户名，命令执行后需要再输入密码，第1个仅指定了远程的目录，文件名字不变，第2个指定了文件名.
+
+第3,4个没有指定用户名，命令执行后需要输入用户名和密码，第3个仅指定了远程的目录，文件名字不变，第4个指定了文件名.
+
+应用实例：
+scp /home/space/music/1.mp3 root@www.runoob.com:/home/root/others/music 
+scp /home/space/music/1.mp3 root@www.runoob.com:/home/root/others/music/001.mp3 
+scp /home/space/music/1.mp3 www.runoob.com:/home/root/others/music 
+scp /home/space/music/1.mp3 www.runoob.com:/home/root/others/music/001.mp3 
+
+复制目录命令格式：
+  scp -r local_folder remote_username@remote_ip:remote_folder 
+或者 
+  scp -r local_folder remote_ip:remote_folder 
+第1个指定了用户名，命令执行后需要再输入密码；
+第2个没有指定用户名，命令执行后需要输入用户名和密码；
+
+应用实例：
+scp -r /home/space/music/ root@www.runoob.com:/home/root/others/ 
+scp -r /home/space/music/ www.runoob.com:/home/root/others/ 
+上面命令将本地 music 目录复制到远程 others 目录下。
+
+2.从远程复制到本地
+
+从远程复制到本地，只要将从本地复制到远程的命令的后2个参数调换顺序即可，如下实例
+
+应用实例：
+scp root@www.runoob.com:/home/root/others/music /home/space/music/1.mp3 
+scp -r www.runoob.com:/home/root/others/ /home/space/music/
+
+3.说明
+(1).如果远程服务器防火墙有为scp命令设置了指定的端口，我们需要使用 -P 参数来设置命令的端口号，命令格式如下：
+
+scp 命令使用端口号 4588
+scp -P 4588 remote@www.runoob.com:/usr/local/sin.sh /home/administrator
+(2).使用scp命令要确保使用的用户具有可读取远程服务器相应文件的权限，否则scp命令是无法起作用的。
+```
+### rsync
+### 编写集群分发脚本 xsync
+### 编写集群操作脚本 xcall
+### 配置集群
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 配置hadoop资源
 ```
 [root@mini-1 hadoop]# pwd
