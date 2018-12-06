@@ -521,9 +521,427 @@ scp -P 4588 remote@www.runoob.com:/usr/local/sin.sh /home/administrator
 (2).使用scp命令要确保使用的用户具有可读取远程服务器相应文件的权限，否则scp命令是无法起作用的。
 ```
 ### rsync
+```
+rsync 远程同步工具，主要用于备份和镜像。具有速度快、 避免复制相同内容和支持符
+号链接的优点。
+
+安装:
+yum -y install rsync
+
+rsync 和 scp 区别： 用 rsync 做文件的复制要比 scp 的速度快， rsync 只对差异文件做更
+新。 scp 是把所有文件都复制过去。
+
+基本语法
+rsync  -rvl     $pdir/$fname          $user@hadoop$host:$pdir
+命令  命令参数   要拷贝的文件路径/名称   目的用户@主机:目的路径
+选项
+-r 递归
+-v 显示复制过程
+-l 拷贝符号连接
+
+案例实操
+把本机/data/tmp 目录同步到 mini2 服务器的 root 用户下的/data/tmp 目录
+[root@mini-1 data]# rsync -rvl /data/tmp/ root@mini2:/data
+bash: rsync: command not found
+rsync: connection unexpectedly closed (0 bytes received so far) [sender]
+rsync error: remote command not found (code 127) at io.c(226) [sender=3.1.2]
+[root@mini-1 data]#
+
+报错原因：
+线上的新服务器没有安装rsync导致。
+
+解决办法：
+新服务器（目标服务器）执行命令 yum install rsync -y 问题解决。
+
+目标服务器安装rsync之后,重新执行:
+[root@mini-1 data]# rsync -rvl /data/tmp root@mini3:/data
+sending incremental file list
+tmp/
+tmp/test.txt
+
+sent 138 bytes  received 39 bytes  118.00 bytes/sec
+total size is 15  speedup is 0.08
+[root@mini-1 data]#
+```
 ### 编写集群分发脚本 xsync
-### 编写集群操作脚本 xcall
+```
+1.需求分析：循环复制文件到所有节点的相同目录下
+（1）原始拷贝：
+  rsync -rvl /opt/module root@hadoop103:/opt/
+（2）期望脚本：
+  xsync 要同步的文件名称
+（3）在/usr/local/bin 这个目录下存放的脚本，可以在系统任何地方直接执行。
+
+2.案例实操：
+（1）在/usr/local/bin 目录下创建 xsync 文件， 文件内容如下：
+  [root@mini-1 tmp]# cd /usr/local/bin/
+  [root@mini-1 bin]# ll
+  total 0
+  [root@mini-1 bin]# touch xsync
+  [root@mini-1 bin]# vim xsync 
+
+  -----------------------------------------------------------------------------
+  #!/bin/bash
+  #1 获取输入参数个数， 如果没有参数，直接退出
+  pcount=$#
+  if((pcount==0)); then
+  echo no args;
+  exit;
+  fi
+  #2 获取文件名称
+  p1=$1
+  fname=`basename $p1`
+  echo fname=$fname
+  #3 获取上级目录到绝对路径
+  pdir=`cd -P $(dirname $p1); pwd`
+  echo pdir=$pdir
+  #4 获取当前用户名称
+  user=`whoami`
+  #5 循环
+  for((host=1; host<3; host++)); do
+  #echo $pdir/$fname $user@mini-$host:$pdir
+  echo --------------- mini-$host ----------------
+  rsync -rvl $pdir/$fname $user@mini$host:$pdir
+  done
+  -----------------------------------------------------------------------------
+
+（2）修改脚本 xsync 具有执行权限
+  [root@mini-1 bin]# chmod 777 xsync
+  [root@mini-1 bin]# ll
+  total 4
+  -rwxrwxrwx. 1 root root 536 Dec  2 17:37 xsync
+  [root@mini-1 bin]#
+（3） 调用脚本形式： xsync 文件名称
+  [root@mini-1 data]# pwd
+  /data
+  [root@mini-1 data]# ll
+  total 171156
+  drwxr-xr-x. 3 root root        53 Oct 17 06:39 hadoop
+  -rw-r--r--. 1 root root 175262413 Oct 12 20:01 jdk-8u171-linux-x64.rpm
+  drwxr-xr-x. 2 root root        22 Dec  2 17:34 tmp
+  [root@mini-1 data]#
+  [root@mini-1 data]# xsync tmp/
+  fname=tmp
+  pdir=/data
+  --------------- mini2 ----------------
+  sending incremental file list
+  tmp/
+  tmp/test.txt
+
+  sent 138 bytes  received 39 bytes  118.00 bytes/sec
+  total size is 15  speedup is 0.08
+  --------------- mini3 ----------------
+  sending incremental file list
+  tmp/
+  tmp/test.txt
+
+  sent 138 bytes  received 39 bytes  354.00 bytes/sec
+  total size is 15  speedup is 0.08
+  [root@mini-1 data]#
+
+  (4) 校验是否复制成功
+  [root@mini-2 data]# ll
+  total 0
+  drwxr-xr-x. 3 root root 53 Dec  2 21:15 hadoop
+  drwxr-xr-x. 2 root root 22 Dec  6 06:46 tmp
+  [root@mini-2 data]# 
+```
 ### 配置集群
+#### 集群部署规划
+
+|  | mini-1 | mini-2 | mini-3 |
+| :------: | :------: | :------: |:------: |
+| hdfs | NameNode, DataNode | DataNode |SecondaryNameNode,DataNode |
+| yarn | NodeManager | ResourceManager,NodeManager |NodeManager |
+
+#### 配置文件
+##### core-site.xml
+```
+<configuration>
+  <!-- 指定HADOOP所使用的文件系统schema（URI），HDFS的老大（NameNode）的地址 -->
+  <property>
+        <name>fs.defaultFS</name>
+        <!-- mini-1为当前机器名或者ip号 -->
+        <value>hdfs://mini1:9000</value>
+  </property>
+  <!-- 指定hadoop运行时产生临时文件的存储目录 -->
+  <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/data/hadoop/hadoop-3.1.1/tmp</value>
+  </property>
+</configuration>
+```
+
+##### hdfs
+
+1 hadoop-env.sh
+```
+export JAVA_HOME=/usr/java/jdk1.8.0_171-amd64
+```
+
+2 hdfs-site.xml
+```
+<configuration>
+  <property>
+     <name>dfs.replication</name>
+     <value>3</value>
+  </property>
+  <property>
+     <name>dfs.namenode.secondary.http-address</name>
+     <value>mini3:50090</value>
+  </property>
+</configuration>
+```
+
+3 slaves
+
+vim slaves
+```
+mini1
+mini2
+mini3
+```
+##### yarn
+1.yarn-env.sh
+```
+export JAVA_HOME=/usr/java/jdk1.8.0_171-amd64
+```
+
+2.yarn-site.xml
+```
+<configuration>
+<!-- Site specific YARN configuration properties -->
+  <!-- 指定YARN的老大（ResourceManager）的地址 -->
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>mini2</value>
+  </property>
+  <!-- reducer获取数据的方式 -->
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+</configuration>
+```
+
+#####  mapreduce
+1.mapred-env.sh
+```
+export JAVA_HOME=/usr/java/jdk1.8.0_171-amd64
+```
+
+2.mapred-site.xml
+```
+<configuration>
+  <!-- 指定mr运行在yarn上 -->
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+</configuration>
+```
+#### 在集群上分发以上所有文件
+```
+[root@mini-1 etc]# pwd
+/data/hadoop/hadoop-3.1.1/etc
+[root@mini-1 etc]# ll
+total 4
+drwxr-xr-x. 3 1000 1001 4096 Dec  6 06:41 hadoop
+[root@mini-1 etc]#
+[root@mini-1 etc]# xsync hadoop/
+fname=hadoop
+pdir=/data/hadoop/hadoop-3.1.1/etc
+--------------- mini2 ----------------
+sending incremental file list
+hadoop/capacity-scheduler.xml
+hadoop/configuration.xsl
+hadoop/container-executor.cfg
+hadoop/core-site.xml
+hadoop/hadoop-env.cmd
+hadoop/hadoop-env.sh
+hadoop/hadoop-metrics2.properties
+hadoop/hadoop-policy.xml
+hadoop/hadoop-user-functions.sh.example
+hadoop/hdfs-site.xml
+hadoop/httpfs-env.sh
+hadoop/httpfs-log4j.properties
+hadoop/httpfs-signature.secret
+hadoop/httpfs-site.xml
+hadoop/kms-acls.xml
+hadoop/kms-env.sh
+hadoop/kms-log4j.properties
+hadoop/kms-site.xml
+hadoop/log4j.properties
+hadoop/mapred-env.cmd
+hadoop/mapred-env.sh
+hadoop/mapred-queues.xml.template
+hadoop/mapred-site.xml
+hadoop/slaves
+hadoop/ssl-client.xml.example
+hadoop/ssl-server.xml.example
+hadoop/user_ec_policies.xml.template
+hadoop/workers
+hadoop/yarn-env.cmd
+hadoop/yarn-env.sh
+hadoop/yarn-site.xml
+hadoop/yarnservice-log4j.properties
+hadoop/shellprofile.d/example.sh
+
+sent 5,066 bytes  received 1,651 bytes  4,478.00 bytes/sec
+total size is 106,896  speedup is 15.91
+--------------- mini3 ----------------
+sending incremental file list
+hadoop/capacity-scheduler.xml
+hadoop/configuration.xsl
+hadoop/container-executor.cfg
+hadoop/core-site.xml
+hadoop/hadoop-env.cmd
+hadoop/hadoop-env.sh
+hadoop/hadoop-metrics2.properties
+hadoop/hadoop-policy.xml
+hadoop/hadoop-user-functions.sh.example
+hadoop/hdfs-site.xml
+hadoop/httpfs-env.sh
+hadoop/httpfs-log4j.properties
+hadoop/httpfs-signature.secret
+hadoop/httpfs-site.xml
+hadoop/kms-acls.xml
+hadoop/kms-env.sh
+hadoop/kms-log4j.properties
+hadoop/kms-site.xml
+hadoop/log4j.properties
+hadoop/mapred-env.cmd
+hadoop/mapred-env.sh
+hadoop/mapred-queues.xml.template
+hadoop/mapred-site.xml
+hadoop/slaves
+hadoop/ssl-client.xml.example
+hadoop/ssl-server.xml.example
+hadoop/user_ec_policies.xml.template
+hadoop/workers
+hadoop/yarn-env.cmd
+hadoop/yarn-env.sh
+hadoop/yarn-site.xml
+hadoop/yarnservice-log4j.properties
+hadoop/shellprofile.d/example.sh
+
+sent 5,066 bytes  received 1,655 bytes  13,442.00 bytes/sec
+total size is 106,896  speedup is 15.90
+[root@mini-1 etc]#
+```
+#### 查看文件分发情况
+```
+[root@mini-2 hadoop]# pwd
+/data/hadoop/hadoop-3.1.1/etc/hadoop
+[root@mini-2 hadoop]# cat slaves 
+mini1
+mini2
+mini3
+[root@mini-2 hadoop]#
+
+[root@mini-3 hadoop]# pwd
+/data/hadoop/hadoop-3.1.1/etc/hadoop
+[root@mini-3 hadoop]# cat slaves 
+mini1
+mini2
+mini3
+[root@mini-3 hadoop]#
+```
+### 集群启动及测试
+#### 启动集群(NameNode节点)
+1.如果集群是第一次启动,需要在格式化namenode,先删除集群节点的 /data/hadoop/hadoop-3.1.1/logs文件夹
+```
+[root@mini-1 hadoop-3.1.1]# pwd
+/data/hadoop/hadoop-3.1.1
+[root@mini-1 hadoop-3.1.1]# ll
+total 184
+drwxr-xr-x. 2 1000 1001    183 Aug  2 13:05 bin
+drwxr-xr-x. 3 1000 1001     20 Aug  2 12:28 etc
+drwxr-xr-x. 2 1000 1001    106 Aug  2 13:05 include
+drwxr-xr-x. 3 1000 1001     20 Aug  2 13:05 lib
+drwxr-xr-x. 4 1000 1001   4096 Aug  2 13:05 libexec
+-rw-r--r--. 1 1000 1001 147144 Jul 29 07:13 LICENSE.txt
+drwxr-xr-x. 3 root root   4096 Oct 20 10:32 logs
+-rw-r--r--. 1 1000 1001  21867 Jul 29 07:13 NOTICE.txt
+-rw-r--r--. 1 1000 1001   1366 Jul 29 04:41 README.txt
+drwxr-xr-x. 3 1000 1001   4096 Aug  2 12:28 sbin
+drwxr-xr-x. 4 1000 1001     31 Aug  2 13:17 share
+drwxr-xr-x. 5 root root     51 Oct 20 10:32 tmp
+[root@mini-1 hadoop-3.1.1]# rm -rf logs/
+[root@mini-1 hadoop-3.1.1]# bin/hdfs namenode -format
+```
+2.启动HDFS
+```
+[root@mini-1 hadoop-3.1.1]# sbin/start-dfs.sh
+[root@mini-1 hadoop-3.1.1]# sbin/start-dfs.sh
+Starting namenodes on [mini1]
+ERROR: Attempting to operate on hdfs namenode as root
+ERROR: but there is no HDFS_NAMENODE_USER defined. Aborting operation.
+Starting datanodes
+ERROR: Attempting to operate on hdfs datanode as root
+ERROR: but there is no HDFS_DATANODE_USER defined. Aborting operation.
+Starting secondary namenodes [mini3]
+ERROR: Attempting to operate on hdfs secondarynamenode as root
+ERROR: but there is no HDFS_SECONDARYNAMENODE_USER defined. Aborting operation.
+[root@mini-1 hadoop-3.1.1]# 
+```
+
+出现错误,解决办法:
+
+是因为缺少用户定义造成的，所以分别编辑开始和关闭脚本
+```
+$ vim sbin/start-dfs.sh 
+$ vim sbin/stop-dfs.sh 
+在顶部空白处添加内容： 
+HDFS_DATANODE_USER=root 
+HADOOP_SECURE_DN_USER=hdfs 
+HDFS_NAMENODE_USER=root 
+HDFS_SECONDARYNAMENODE_USER=root
+```
+
+是因为缺少用户定义造成的，所以分别编辑开始和关闭脚本 
+```
+$ vim sbin/start-yarn.sh 
+$ vim sbin/stop-yarn.sh
+在顶部空白处添加内容：
+YARN_RESOURCEMANGER_USER=root
+HADOOP_SECURE_DN_USER=yarn
+YARN_NODEMANGER_USER=root
+```
+
+修改后，同步到其他集群:
+```
+[root@mini-1 hadoop-3.1.1]# xsync sbin/
+```
+
+然后再次启动：
+```
+[root@mini-1 hadoop-3.1.1]# sbin/start-dfs.sh
+WARNING: HADOOP_SECURE_DN_USER has been replaced by HDFS_DATANODE_SECURE_USER. Using value of HADOOP_SECURE_DN_USER.
+Starting namenodes on [mini1]
+Last login: Thu Dec  6 08:41:57 CST 2018 from 192.168.17.1 on pts/3
+Starting datanodes
+Last login: Thu Dec  6 08:47:28 CST 2018 on pts/2
+localhost: Warning: Permanently added 'localhost' (ECDSA) to the list of known hosts.
+Starting secondary namenodes [mini3]
+Last login: Thu Dec  6 08:47:31 CST 2018 on pts/2
+mini3: WARNING: /data/hadoop/hadoop-3.1.1/logs does not exist. Creating.
+[root@mini-1 hadoop-3.1.1]#
+```
+
+3.启动yarn
+
+
+
+#### 集群基本测试
+
+
+
+
+
+### hadoop启动停止方式
+### 集群时间同步
+### 配置集群常见问题
 
 
 
