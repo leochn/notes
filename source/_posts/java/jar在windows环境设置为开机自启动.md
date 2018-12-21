@@ -1,7 +1,7 @@
 ---
 title: jar在windows环境设置为开机自启动
 date: 2018-12-17 14:10:10
-tags: java
+tags: [java,tool]
 ---
 
 ## jar包在windows环境设置为开机自启动

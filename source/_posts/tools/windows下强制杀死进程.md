@@ -1,7 +1,7 @@
 ---
 title: windows下强制杀死进程
 date: 2018-11-30 15:45:05
-tags: windows
+tags: [windows,tool]
 ---
 ## windows下强制杀死进程
 ```
