@@ -1,7 +1,7 @@
 ---
 title: zookeeper单机搭建
 date: 2018-09-18 14:54:41
-tags: [zookeeper,bigdata]
+tags: [linux,zookeeper,bigdata]
 ---
 
 ## 下载zookeeper
