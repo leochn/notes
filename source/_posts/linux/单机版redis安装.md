@@ -266,6 +266,14 @@ not connected> get a
 Could not connect to Redis at 127.0.0.1:6379: Connection refused
 not connected>
 ```
+## 绑定多个IP
+```
+# bind 127.0.0.1
+ bind 127.0.0.1
+ bind 116.xxx.xxx.xxx
+# Protected mode is a layer of security protection, in order to avoid that
+# Redis instances left open on the internet are accessed and exploited.
+```
 
 ## 设置redis密码(永久方式)
 ### 设置密码

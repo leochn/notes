@@ -1,7 +1,7 @@
 ---
 title: hadoop集群搭建
 date: 2018-10-11 22:57:05
-tags: [hadoop,bigdata]
+tags: [linux,hadoop,bigdata]
 ---
 ## 本次测试所用软件及环境
     Centos7
