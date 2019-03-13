@@ -90,3 +90,26 @@ tags: python
                 "file": "config/Python/Main.sublime-menu"
             }
         },
+
+### 详细步骤
+
+在菜单中选择Package Control：Install Package
+
+在命令输入框中输入： SublimeREPL，进行安装。
+
+点击菜单啦【Tools】->【SublimeREPL】->【python】，查看安装的插件，如图所示
+
+设置快捷键：点击菜单栏【Preferences】->【Key Bindings】
+
+输入代码如下并保存：
+
+    { 
+        "keys": ["f5"], 
+        "caption": "SublimeREPL:Python",
+        "command": "run_existing_window_command", 
+        "args":{
+            "id": "repl_python_run",
+            "file": "config/Python/Main.sublime-menu"
+        }
+    },
+
