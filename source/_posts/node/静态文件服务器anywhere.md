@@ -1,7 +1,7 @@
 ---
 title: 静态文件服务器anywhere
 date: 2017-07-04 06:42:34
-tags: node
+tags: [node,npm]
 ---
 ## Anywhere 随启随用的静态文件服务器
 
