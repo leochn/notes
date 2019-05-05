@@ -1,7 +1,7 @@
 ---
 title: eclipse快捷键
 date: 2017-05-21 06:58:20
-tags: eclipse
+tags: [eclipse,tool]
 ---
 关于eclipse的一些快捷键操作
 <!--more-->

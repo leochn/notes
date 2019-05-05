@@ -1,7 +1,7 @@
 ---
 title: npm安装netcat
 date: 2019-03-26 06:13:29
-tags: [node,npm]
+tags: [node,npm,tool]
 ---
 ## 什么是nc
 nc是netcat的简写，有着网络界的瑞士军刀美誉。因为它短小精悍、功能实用，被设计为一个简单、可靠的网络工具.

@@ -1,7 +1,7 @@
 ---
 title: 使用hexo换了电脑后如何更新博客
 date: 2018-11-30 21:31:41
-tags: hexo
+tags: [hexo,tool]
 ---
 
 ## 基于hexo-github搭建一个独立博客

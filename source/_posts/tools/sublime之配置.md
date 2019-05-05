@@ -1,7 +1,7 @@
 ---
 title: sublime之配置
 date: 2017-05-21 06:40:38
-tags: sublime
+tags: [sublime,tool]
 ---
 关于sublime text3的一些配置操作
 <!--more-->

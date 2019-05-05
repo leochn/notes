@@ -1,7 +1,7 @@
 ---
 title: sublime快捷键
 date: 2017-05-21 06:55:33
-tags: sublime
+tags: [sublime,tool]
 ---
 关于sublime的一些快捷键操作
 <!--more-->

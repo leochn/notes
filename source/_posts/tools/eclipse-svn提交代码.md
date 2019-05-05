@@ -1,7 +1,7 @@
 ---
 title: eclipse-svn提交代码
 date: 2017-05-21 07:09:58
-tags: [eclipse,svn]
+tags: [eclipse,svn,tool]
 ---
 关于eclipse-svn提交代码的一些配置操作
 <!--more-->
