@@ -462,7 +462,7 @@ vim /etc/sysconfig/network-scripts/ifcfg-网络接口名称
 
 TYPE=Ethernet
 
-BOOTPROTO=static
+BOOTPROTO=static  # BOOTPROTO=dhcp表示每次关闭linux系统在重新启动之后都会重新获得新的ip地址，dhcp修改为static
 
 DEFROUTE=yes
 
@@ -504,7 +504,7 @@ DNS1=192.168.1.2         #DNS配置
 
 第三步：重启网络服务
 
-servicenetwork restart
+service network restart
 
 ##### 其他
 

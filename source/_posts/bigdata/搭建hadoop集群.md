@@ -67,7 +67,7 @@ Last login: Fri Mar 29 19:12:16 2019 from 192.168.175.1
 #### 安装JDK
 
 ##### 查看实时已经安装JDK
-```
+```bash
 [root@vm1 software]# java -version
 -bash: java: command not found
 [root@vm1 software]# rpm -qa | grep java
@@ -75,7 +75,7 @@ Last login: Fri Mar 29 19:12:16 2019 from 192.168.175.1
 ```
 ##### 解压文件
 在解压的时候 -C 是解压到指定目录中
-```
+```bash
 [root@vm1 software]# pwd
 /software
 [root@vm1 software]# ll
@@ -203,7 +203,7 @@ Last login: Fri Mar 29 19:38:53 2019 from 192.168.175.129
 
 1.从服务器复制文件到本地：
 scp root@192.168.1.100:/data/test.txt /home/myfile/
-root@192.168.1.100   root是目标服务器（有你需要拷贝文件的服务器）的用户名，192.168.1.100是IP地址，后面紧跟的 “：” 不要忘记，/data/test.txt 是目标服务器中你要拷贝文件的地址，接一个空格，后面的 /home/myfile/ 是本地接收文件的地址。
+root@192.168.1.100   root是目标服务器（有你需要拷贝文件的服务器）的用户名，192.168.1.100是IP地址，后面紧跟的 “:” 不要忘记，/data/test.txt 是目标服务器中你要拷贝文件的地址，接一个空格，后面的 /home/myfile/ 是本地接收文件的地址。
 
 2.从服务器复制文件夹到本地：
 scp -r root@192.168.1.100:/data/ /home/myfile/
@@ -385,10 +385,10 @@ source /etc/profile
 
 #### 集群部署规划
 
-| 集群 | vm1 | vm2 | vm3 |
-| :------: | :------: | :------: |:------: |
-| hdfs | NameNode, DataNode | DataNode |SecondaryNameNode,DataNode |
-| yarn | NodeManager | ResourceManager,NodeManager |NodeManager |
+| 集群 |        vm1         |             vm2             |            vm3             |
+| :--: | :----------------: | :-------------------------: | :------------------------: |
+| hdfs | NameNode, DataNode |          DataNode           | SecondaryNameNode,DataNode |
+| yarn |    NodeManager     | ResourceManager,NodeManager |        NodeManager         |
 
 #### 给vm2配置免密登录
 因为vm服务器需要作为ResourceManager的主节点,需要免密登录到vm1,vm2,vm3这3台服务器
@@ -843,6 +843,7 @@ Last login: Tue Apr  2 19:47:35 CST 2019 on pts/0
 ```
 
 *2.启动验证*
+
 ```
 [root@vm1 hadoop-3.1.1]# jps
 8339 NameNode
@@ -870,4 +871,13 @@ Last login: Tue Apr  2 19:47:35 CST 2019 on pts/0
 ```
 [root@vm1 hadoop-3.1.1]# sbin/stop-all.sh 
 ```
+
+
+
+
+
+
+
+
+
 
