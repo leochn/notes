@@ -315,7 +315,8 @@ java -version
 
 #### 关闭防火墙
 ```
-systemctl stop firewalld
+systemctl stop firewalld    # 停止firewall
+systemctl disable firewalld # 禁止firewall开机启动
 ```
 
 ### 配置hadoop集群
@@ -681,7 +682,7 @@ Last login: Sun Mar 31 08:04:52 CST 2019 on pts/0
 3131 org.apache.hadoop.hdfs.server.datanode.DataNode
 [root@vm3 hadoop-3.1.1]#
 ```
-##### 浏览器查看
+##### 浏览器查看HDFS页面管理界面
 
 关闭防火墙
 
@@ -821,6 +822,10 @@ vm2: nodemanager is running as process 3407.  Stop it first.
 3087 DataNode
 [root@vm3 hadoop-3.1.1]#
 ```
+
+##### 浏览器查看YARN的管理界面
+
+<http://192.168.175.130:8088/cluster>
 
 ##### 同时启动HDFS和ResourceManager,NodeManager
 
