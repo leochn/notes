@@ -15,6 +15,7 @@ https://mirrors.tuna.tsinghua.edu.cn/apache/hive/
 4）github 地址：
 https://github.com/apache/hive
 ```
+<!-- more -->
 
 ## Hive安装部署
 ### Hive安装及配置
