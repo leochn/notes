@@ -14,9 +14,23 @@ IDEA配置:
 ![IDEA配置](/assets/images/java/springboot远程debug-001.png)
 
 ## 远程服务器启动java应用
+
+Java -jar启动添加如下参数
+
 ```
 java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 .\springboot-watermis-0.0.1-SNAPSHOT.jar
-Listening for transport dt_socket at address: 5005
+```
+
+```
+-Xdebug是通知JVM工作在DEBUG模式下(这里不加也是可以的)
+
+-Xrunjdwp是通知JVM使用(java debug wire protocol)来运行调试环境
+
+transport指定了调试数据的传送方式，dt_socket是指用SOCKET模式
+
+server参数是指是否支持在server模式的VM中
+
+suspend指明，是否在调试客户端建立起来后，再执行JVM
 ```
 
 运行后可以看到在监听5005端口：

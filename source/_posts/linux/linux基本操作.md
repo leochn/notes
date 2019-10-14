@@ -10,7 +10,7 @@ linux的一些基本操作
 ### linux常用命令
 #### 查看当前系统的时间：date
 
-[root@localhost ~]# date +%Y-%m-%d --date="-1day"  # 加减也可以 month|year
+    [root@localhost ~]# date +%Y-%m-%d --date="-1day"  # 加减也可以 month|year
 
 设置时间:date -s "2018-05-14 06:50:51"  ## 修改时间
 

@@ -13,12 +13,21 @@ tags: [docker,gitlab]
 <!-- more -->
 
 ## 搭建过程
+### 拉取镜像
+```
+[root@node-1 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+gitlab/gitlab-ce    latest              286ddf724a59        13 days ago         1.84GB
+gitlab/gitlab-ce    custom_gitlab       09b815498cc6        2 months ago        1.33GB
+[root@node-1 ~]#
+```
 ### docker-compose.yml文件
+注意: image: "gitlab/gitlab-ce:custom_gitlab" 需要写一个固定的版本,不然的话,每次custom_gitlab有新版本都会自动升级。
 ```yml
 version: '3'
 services:
   gitlab:
-    image: "gitlab/gitlab-ce:latest"
+    image: "gitlab/gitlab-ce:custom_gitlab"
     networks:
       ingress:
         aliases:
@@ -87,13 +96,13 @@ bbmwq37hyrs70hyl3mhvuwr95 *   node-1   Ready               Active              L
 ```
 [root@node-1 gitlab]# docker service ls
 ID                  NAME                MODE                REPLICAS            IMAGE                     PORTS
-z2tfwmj9jdya        gitlab_gitlab       replicated          1/1                 gitlab/gitlab-ce:latest   *:443->443/tcp,*:1022->22/tcp,*:8889->80/tcp
+z2tfwmj9jdya        gitlab_gitlab       replicated          1/1                 gitlab/gitlab-ce:custom_gitlab   *:443->443/tcp,*:1022->22/tcp,*:8889->80/tcp
 [root@node-1 gitlab]# docker service ps gitlab_gitlab
 ID                  NAME                IMAGE                     NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
-7gj9t6pa7dft        gitlab_gitlab.1     gitlab/gitlab-ce:latest   node-1              Running             Running 22 minutes ago                       
+7gj9t6pa7dft        gitlab_gitlab.1     gitlab/gitlab-ce:custom_gitlab   node-1              Running             Running 22 minutes ago                       
 [root@node-1 gitlab]# docker ps
 CONTAINER ID        IMAGE                     COMMAND             CREATED             STATUS                    PORTS                     NAMES
-d5f3ee2e867e        gitlab/gitlab-ce:latest   "/assets/wrapper"   25 minutes ago      Up 25 minutes (healthy)   22/tcp, 80/tcp, 443/tcp   gitlab_gitlab.1.7gj9t6pa7dft5knp7yab4n58e
+d5f3ee2e867e        gitlab/gitlab-ce:custom_gitlab   "/assets/wrapper"   25 minutes ago      Up 25 minutes (healthy)   22/tcp, 80/tcp, 443/tcp   gitlab_gitlab.1.7gj9t6pa7dft5knp7yab4n58e
 [root@node-1 gitlab]# netstat -an|grep 8889
 tcp6       0      0 :::8889                 :::*                    LISTEN     
 [root@node-1 gitlab]# netstat -an|grep 1022
@@ -139,13 +148,13 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 [root@node-1 gitlab]# docker stack deploy -c docker-compose-gitlab.yml gitlab
 [root@node-1 gitlab]# docker service ls
 ID                  NAME                MODE                REPLICAS            IMAGE                     PORTS
-fw24s1qn3qam        gitlab_gitlab       replicated          0/1                 gitlab/gitlab-ce:latest   *:443->443/tcp,*:1022->22/tcp,*:8889->80/tcp
+fw24s1qn3qam        gitlab_gitlab       replicated          0/1                 gitlab/gitlab-ce:custom_gitlab   *:443->443/tcp,*:1022->22/tcp,*:8889->80/tcp
 [root@node-1 gitlab]# docker service ps gitlab_gitlab
 ID                  NAME                IMAGE                     NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
-kkprbhopuqdd        gitlab_gitlab.1     gitlab/gitlab-ce:latest   node-1              Running             Running 5 seconds ago                       
+kkprbhopuqdd        gitlab_gitlab.1     gitlab/gitlab-ce:custom_gitlab   node-1              Running             Running 5 seconds ago                       
 [root@node-1 gitlab]# docker ps
 CONTAINER ID        IMAGE                     COMMAND             CREATED             STATUS                   PORTS                     NAMES
-2cab9fbe9a84        gitlab/gitlab-ce:latest   "/assets/wrapper"   8 minutes ago       Up 7 minutes (healthy)   22/tcp, 80/tcp, 443/tcp   gitlab_gitlab.1.kkprbhopuqddwrv9e1i258p43
+2cab9fbe9a84        gitlab/gitlab-ce:custom_gitlab   "/assets/wrapper"   8 minutes ago       Up 7 minutes (healthy)   22/tcp, 80/tcp, 443/tcp   gitlab_gitlab.1.kkprbhopuqddwrv9e1i258p43
 [root@node-1 gitlab]#
 ```
 

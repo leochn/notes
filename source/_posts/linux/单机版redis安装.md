@@ -312,6 +312,7 @@ not connected>
 
 ## Redis配置为Service系统服务并开机自启动
 将程序配置为服务后，就可以使用service命令对系统服务进行管理，如：start（启动）、stop（停止）、restart（重启）等。Redis安装后默认不会配置为系统服务。
+这个是centos6 的service 命令。
 
 ### 复制redis_init_script文件
 1.将utils/redis_init_script文件复制/etc/rc.d/init.d/目录，并重命名为redis：
