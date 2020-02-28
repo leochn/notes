@@ -83,5 +83,20 @@ on s.ID_FUNCTION = f.ID
 set s.DATA_TYPE = f.DATA_TYPE ,s.RATIO = f.RATIO;
 ```
 
+## postgresql根据一张表的数据更新到另一张表
+```sql
+-- 计算geom的值,并更新geom
+UPDATE wx_site_pipe AS t1
+  SET geom = t2.geom2
+FROM 
+(
+  SELECT 
+    gid, 
+    ST_GeomFromText('MULTILINESTRING(('|| start_point_lng || ' ' || start_point_lat || ',' || end_point_lng || ' ' || end_point_lat || '))',4326) as geom2
+  FROM wx_site_pipe ORDER BY gid asc
+) AS t2
+WHERE t1.gid = t2.gid 
+```
+
 
 
