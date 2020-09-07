@@ -19,7 +19,11 @@ mysql: /usr/lib64/mysql /usr/share/mysql
 
 ## 安装mysql
 ### 从oracle官方网站下载linux系统对应的mysql的yum源包
+```
+https://dev.mysql.com/downloads/repo/yum/
 mysql57-community-release-el7-11.noarch
+
+```
 
 ### 把yum源包上传到linux
 ```
