@@ -22,9 +22,8 @@ http://www.jeyzhang.com/hexo-next-add-post-views.html
 
 2. 在本地依次执行下列指令:
 
-npm install hexo,
-npm install,
-npm install hexo-deployer-git
+npm install hexo -g
+npm install hexo-deployer-git -g
 
 (记得，不需要hexo init这条指令)
 
